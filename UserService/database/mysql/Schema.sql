@@ -1,0 +1,38 @@
+CREATE DATABASE IF NOT EXISTS SepFirst;
+use SepFirst;
+
+CREATE TABLE Student (
+	id INT NOT NULL AUTO_INCREMENT,
+	firstName VARCHAR(255) NOT NULL,
+	lastName VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+	password VARCHAR(255) NOT NULL,
+	gender VARCHAR(255) NOT NULL,
+	email VARCHAR(255),
+	blocked BOOL NOT NULL,
+	datecreated DATETIME NOT NULL,
+	dateupdated DATETIME,
+	UNIQUE (username),
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE Tutor (
+	id INT NOT NULL AUTO_INCREMENT,
+    firstName VARCHAR(255) NOT NULL,
+	lastName VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+	password VARCHAR(255) NOT NULL,
+	gender VARCHAR(255) NOT NULL,
+	email VARCHAR(255),
+	validate VARCHAR(255) NOT NULL,
+	datecreated DATETIME NOT NULL,
+	dateupdated DATETIME,
+	UNIQUE (username),
+	PRIMARY KEY (id)
+);
+
+CREATE TABLE Admin (
+	id INT NOT NULL AUTO_INCREMENT,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+);
