@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"SepFirst/UserService/pkg/utils/hasher"
+	hasher "SepFirst/UserService/pkg/utils"
 )
 
 type Password struct {
@@ -25,5 +25,9 @@ func (p *Password) HashPassword() error {
 
 // compare password
 func (p *Password) ComparePassword() bool {
-	return true
+	compare, err := hasher.ComparePassword(p.Password, p.Password)
+	if err != nil {
+		panic(err)
+	}
+	return compare
 }
