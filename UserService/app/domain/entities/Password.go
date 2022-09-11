@@ -1,7 +1,7 @@
 package entity
 
 import (
-	hasher "SepFirst/UserService/pkg/utils"
+	"SepFirst/UserService/pkg/hasher"
 )
 
 type Password struct {
