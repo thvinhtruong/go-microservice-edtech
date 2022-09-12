@@ -1,6 +1,6 @@
 package apperror
 
-var MsgFlags = map[error]int{
+var MsgFlags = map[error]int32{
 	ErrorInvalidUsername: 10000,
 	ErrorInvalidPassword: 10001,
 	ErrorInvalidFullname: 10002,
@@ -26,9 +26,10 @@ var MsgFlags = map[error]int{
 	ErrorConflict:         30002,
 	ErrorBindJSON:         30003,
 	ErrorContextLostValue: 30004,
+	ErrorNotSupportedYet:  30005,
 }
 
-func GetCode(e error) int {
+func GetCode(e error) int32 {
 	code, ok := MsgFlags[e]
 	if ok {
 		return code
