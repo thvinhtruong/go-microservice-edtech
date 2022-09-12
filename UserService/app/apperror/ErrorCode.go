@@ -77,6 +77,9 @@ var (
 
 	// request is sent but server does not receive it
 	ErrorNoParamReceived = errors.New("no params have been received by the server")
+
+	// api is not supported yet by service
+	ErrorNotSupportedYet = errors.New("api is not supported yet by service")
 )
 
 // Sql error, CRUD operation

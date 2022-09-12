@@ -1,10 +1,6 @@
 package entity
 
-import (
-	"SepFirst/UserService/pkg/utils/hasher"
-)
-
-type Password struct {
+/* type Password struct {
 	ID          int
 	Password    string
 	UserId      int
@@ -26,4 +22,4 @@ func (p *Password) HashPassword() error {
 // compare password
 func (p *Password) ComparePassword() bool {
 	return true
-}
+} */

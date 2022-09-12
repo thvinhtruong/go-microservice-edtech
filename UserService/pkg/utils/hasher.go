@@ -1,4 +1,4 @@
-package hasher
+package utils
 
 import (
 	"SepFirst/UserService/app/apperror"
