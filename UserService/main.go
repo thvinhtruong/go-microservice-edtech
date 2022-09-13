@@ -13,9 +13,9 @@ func main() {
 	utils.LoadConfig()
 
 	host := fmt.Sprintf(
-		"%v:%d",
+		"%v:%v",
 		utils.Configuration.UserServiceServerHost,
-		utils.Configuration.UserServiceServerHost)
+		utils.Configuration.UserServiceServerPort)
 
 	lis, err := net.Listen("tcp", host)
 	if err != nil {
@@ -24,8 +24,10 @@ func main() {
 
 	s := grpc.NewServer()
 	GrpcUserService.RegisterUserServiceServer(s, &GrpcUserService.ZUserServiceServer{})
+
+	fmt.Printf("ZUserServiceServer is listening at %v", host)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to start server %v", err)
 	}
-	fmt.Printf("ZUserServiceServer is listening at %v", host)
+
 }

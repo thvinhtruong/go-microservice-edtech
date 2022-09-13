@@ -1,6 +1,8 @@
 package utils
 
-import "github.com/spf13/viper"
+import (
+	"github.com/spf13/viper"
+)
 
 type Config struct {
 	UserServiceServerHost string `mapstructure:"UserServiceServerHost"`
@@ -9,18 +11,25 @@ type Config struct {
 	MainServiceServerPort int    `mapstructure:"MainServiceServerPort"`
 }
 
-var Configuration Config
+var Configuration = Config{}
+
+func init() {
+	err := LoadConfig()
+	if err != nil {
+
+	}
+}
 
 func LoadConfig() (err error) {
-	viper.SetConfigFile("./conf/config.env")
 
+	viper.SetConfigFile("./conf/config.env")
 	viper.AutomaticEnv()
 
 	err = viper.ReadInConfig()
-
 	if err != nil {
 		return
 	}
+
 	err = viper.Unmarshal(&Configuration)
 	return
 }
