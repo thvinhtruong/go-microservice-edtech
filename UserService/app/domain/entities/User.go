@@ -4,7 +4,7 @@ type User struct {
 	ID          int
 	FullName    string
 	Email       string
-	UserName    string
+	Username    string
 	Gender      string
 	Blocked     bool
 	DateCreated int64
