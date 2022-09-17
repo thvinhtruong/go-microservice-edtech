@@ -3,14 +3,13 @@ package GrpcUserService
 import (
 	"SepFirst/UserService/app/apperror"
 	"context"
-	"fmt"
 )
 
 type ZUserServiceServer struct {
 }
 
 func (s *ZUserServiceServer) LoginUser(ctx context.Context, request *LoginUserRequest) (*LoginUserResponse, error) {
-	fmt.Println(request)
+
 	return &LoginUserResponse{
 		UserId:    -1,
 		ErrorCode: apperror.GetCode(apperror.ErrorNotSupportedYet),

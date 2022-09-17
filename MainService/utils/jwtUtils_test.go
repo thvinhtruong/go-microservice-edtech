@@ -1,11 +1,22 @@
 package utils
 
 import (
+	"SepFirst/MainService/config"
 	"testing"
 )
 
+type TConfig struct {
+}
+
+func (t TConfig) GetConfig(key config.ConfigKey) interface{} {
+	if key == config.HMAC_KEY {
+		return "Tam"
+	}
+	return ""
+}
+
 func TestDecodeToken(t *testing.T) {
-	j := JwtUtils{config: TestingConfig{}}
+	j := JwtUtils{c: TConfig{}}
 	want := InfoInJwt{UserId: 202}
 	token, err := j.GenerateToken(want)
 	if err != nil {
@@ -22,7 +33,7 @@ func TestDecodeToken(t *testing.T) {
 }
 
 func TestGenerateToken(t *testing.T) {
-	j := JwtUtils{config: TestingConfig{}}
+	j := JwtUtils{c: TConfig{}}
 	want := InfoInJwt{UserId: 1}
 	token, err := j.GenerateToken(want)
 	if err != nil {
