@@ -1,12 +1,14 @@
 package utils
 
 import (
+	"SepFirst/MainService/config"
 	"errors"
+	"fmt"
 	"github.com/golang-jwt/jwt/v4"
 )
 
 type JwtUtils struct {
-	config ConfigInterface
+	c config.Config
 }
 
 type InfoInJwt struct {
@@ -27,7 +29,7 @@ func (j *JwtUtils) DecodeToken(tokenString string) (*InfoInJwt, error) {
 
 	// parse tokenString
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		hmac_key, _ := j.config.getHMACKey()
+		hmac_key := fmt.Sprintf("%v", j.c.GetConfig(config.HMAC_KEY))
 		return []byte(hmac_key), nil
 	})
 	if err != nil {
@@ -59,7 +61,7 @@ func (j *JwtUtils) GenerateToken(infoInJwt InfoInJwt) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Get secret key to sign 2 first part
-	HmacKey, _ := j.config.getHMACKey()
+	HmacKey := fmt.Sprintf("%v", j.c.GetConfig(config.HMAC_KEY))
 
 	// sign first 2 part and put result to thrid part
 	tokenString, err := token.SignedString([]byte(HmacKey))

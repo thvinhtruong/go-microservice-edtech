@@ -2,7 +2,7 @@ package main
 
 import (
 	GrpcUserService "SepFirst/UserService/cmd/GrpcUserService"
-	"SepFirst/UserService/utils"
+	config "SepFirst/UserService/config"
 	"fmt"
 	"google.golang.org/grpc"
 	"log"
@@ -10,12 +10,12 @@ import (
 )
 
 func main() {
-	utils.LoadConfig()
 
+	configuration := config.GetInstance()
 	host := fmt.Sprintf(
 		"%v:%v",
-		utils.Configuration.UserServiceServerHost,
-		utils.Configuration.UserServiceServerPort)
+		configuration.GetConfig(config.USER_SERVICE_HOST),
+		configuration.GetConfig(config.USER_SERVICE_PORT))
 
 	lis, err := net.Listen("tcp", host)
 	if err != nil {
