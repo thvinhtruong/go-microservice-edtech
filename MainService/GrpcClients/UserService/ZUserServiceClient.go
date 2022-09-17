@@ -1,7 +1,7 @@
 package GrpcUserService
 
 import (
-	"SepFirst/MainService/utils"
+	"SepFirst/MainService/config"
 	"context"
 	"fmt"
 	"google.golang.org/grpc"
@@ -19,10 +19,12 @@ func init() {
 }
 
 func (c *ZUserServiceClient) Init() {
+	configuration := config.GetInstance()
 	target := fmt.Sprintf(
 		"%v:%v",
-		utils.Configuration.UserServiceServerHost,
-		utils.Configuration.UserServiceServerPort)
+		configuration.GetConfig(config.USER_SERVICE_HOST),
+		configuration.GetConfig(config.USER_SERVICE_PORT),
+	)
 	conn, err := grpc.Dial(target, grpc.WithInsecure())
 	if err != nil {
 		fmt.Println("Connect to UserService failed")
