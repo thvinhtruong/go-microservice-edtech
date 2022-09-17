@@ -9,6 +9,7 @@ type ZUserServiceServer struct {
 }
 
 func (s *ZUserServiceServer) LoginUser(ctx context.Context, request *LoginUserRequest) (*LoginUserResponse, error) {
+
 	return &LoginUserResponse{
 		UserId:    -1,
 		ErrorCode: apperror.GetCode(apperror.ErrorNotSupportedYet),
