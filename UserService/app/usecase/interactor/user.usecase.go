@@ -13,7 +13,7 @@ type UserUsecase struct {
 	userRepo repository.UserRepository
 }
 
-func NewUserUsecase(userRepo repository.UserRepository) *UserUsecase {
+func NewUserUsecase(userRepo repository.Repository) *UserUsecase {
 	return &UserUsecase{userRepo: userRepo}
 }
 
@@ -24,7 +24,7 @@ func (u *UserUsecase) RegisterUser(ctx context.Context, user dto.UserRequest) (i
 		return 0, err
 	}
 
-	return u.userRepo.CreateUser(ctx, record)
+	return u.userRepo.CreateUser(ctx, record, user.Password)
 }
 
 func (u *UserUsecase) GetUserById(ctx context.Context, id int) (dto.UserResponse, error) {

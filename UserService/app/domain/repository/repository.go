@@ -5,8 +5,15 @@ import (
 	"context"
 )
 
+type Repository interface {
+	// User
+	UserRepository
+	// Admin
+	AdminRepository
+}
+
 type UserRepository interface {
-	CreateUser(ctx context.Context, user entity.User) (int, error)
+	CreateUser(ctx context.Context, user entity.User, password string) (int, error)
 	GetUserById(ctx context.Context, userId int) (entity.User, error)
 	UpdateUserPassword(ctx context.Context, userId int, password string) error
 }
