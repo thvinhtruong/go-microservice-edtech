@@ -1,7 +1,7 @@
 package main
 
 import (
-	GrpcUserService "SepFirst/UserService/cmd/GrpcUserService"
+	grpc2 "SepFirst/UserService/app/interface/grpc"
 	config "SepFirst/UserService/config"
 	"fmt"
 	"google.golang.org/grpc"
@@ -23,7 +23,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	GrpcUserService.RegisterUserServiceServer(s, &GrpcUserService.ZUserServiceServer{})
+	grpc2.RegisterUserServiceServer(s, &grpc2.ZUserServiceServer{})
 
 	fmt.Printf("ZUserServiceServer is listening at %v", host)
 	if err := s.Serve(lis); err != nil {

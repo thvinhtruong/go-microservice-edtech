@@ -1,4 +1,4 @@
-package GrpcUserService
+package grpc
 
 import (
 	"SepFirst/UserService/config"

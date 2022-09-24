@@ -6,6 +6,7 @@ import (
 )
 
 func (q *Querier) CreateUser(ctx context.Context, user entity.User, password string) (int, error) {
+
 	err := insertPassword(q, ctx, user.ID, password)
 	if err != nil {
 		return 0, err
