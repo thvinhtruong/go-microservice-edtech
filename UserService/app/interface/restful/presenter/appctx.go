@@ -10,6 +10,8 @@ type AppCtx struct {
 	FiberCtx *fiber.Ctx
 }
 
+//haha
+
 type ErrorResponse struct {
 	ErrorCode  int32  `json:"error_code"`
 	ErrorMsg   string `json:"error_msg"`
