@@ -2,9 +2,7 @@ package grpc
 
 import (
 	"SepFirst/UserService/app/apperror"
-	"SepFirst/UserService/app/interface/persistence/rdbms/sqlconnection"
-	"SepFirst/UserService/app/registry"
-	"SepFirst/UserService/app/usecase/dto"
+	"SepFirst/UserService/app/interface/business"
 	"context"
 )
 
@@ -33,22 +31,7 @@ func (s *ZUserServiceServer) RegisterTutor(ctx context.Context, request *Registe
 	}, nil
 }
 func (s *ZUserServiceServer) RegisterUser(ctx context.Context, request *RegisterUserRequest) (*RegisterUserResponse, error) {
-	user := dto.UserRequest{
-		FullName: "Tam",
-		Email:    "Tam",
-		Username: "Tam",
-		Password: "Tam",
-		Gender:   "Female",
-	}
-	access := registry.BuildUserAccessPoint(false, sqlconnection.DBConn)
-	userId, err := access.Service.RegisterUser(ctx, user)
-	if err != nil {
-
-	}
-	return &RegisterUserResponse{
-		UserId:    int32(userId),
-		ErrorCode: apperror.GetCode(apperror.ErrorNotSupportedYet),
-	}, nil
+	return business.Instance.RegisterUser(ctx, request), nil
 }
 
 func (s *ZUserServiceServer) mustEmbedUnimplementedUserServiceServer() {
