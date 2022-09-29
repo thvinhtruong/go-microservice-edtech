@@ -11,8 +11,8 @@ import (
 )
 
 const createUser = `-- name: CreateUser :execresult
-INSERT INTO User (fullname, username, phone, email, gender)
-VALUES(? , ? , ? , ? , ?)
+INSERT INTO User (fullname, username, phone, email, gender, blocked, datecreated)
+VALUES(? , ? , ? , ? , ?, false, NOW())
 `
 
 type CreateUserParams struct {
@@ -78,7 +78,9 @@ func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
 
 const listUsers = `-- name: ListUsers :many
 SELECT id, fullname, username, gender, email, phone, blocked, datecreated, dateupdated FROM User WHERE blocked = false
-ORDER BY id DESC
+ORDER BY id
+LIMIT 1
+OFFSET 1
 `
 
 func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
