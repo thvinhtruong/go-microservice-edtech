@@ -33,6 +33,7 @@ func Init(cfg config.SConfig) {
 
 // OpenConnection opens a connection to the database.
 func OpenConnection(cfg config.SConfig) (*sql.DB, error) {
+
 	db, err := sql.Open("mysql", cfg.GetConfig(config.USER_SERVICE_HOST).(string))
 	if err != nil {
 		return nil, err

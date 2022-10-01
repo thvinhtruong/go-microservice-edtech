@@ -17,15 +17,9 @@ func init() {
 	Instance = &Business{}
 }
 
-func (b *Business) RegisterUser(ctx context.Context, request *grpc.RegisterUserRequest) *grpc.RegisterUserResponse {
+func (b *Business) RegisterUser(ctx context.Context, user dto.UserRequest) *grpc.RegisterUserResponse {
 	access := registry.BuildUserAccessPoint(false, sqlconnection.DBConn)
-	user := dto.UserRequest{
-		FullName: request.FullName,
-		Email:    request.Email,
-		Password: request.Password,
-		Gender:   request.Gender,
-		Username: request.Password,
-	}
+
 	userId, err := access.Service.RegisterUser(ctx, user)
 	if err != nil {
 		return &grpc.RegisterUserResponse{
