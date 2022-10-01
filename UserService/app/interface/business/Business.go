@@ -28,7 +28,7 @@ func (b *Business) RegisterUser(ctx context.Context, user dto.UserRequest) *grpc
 		}
 	}
 	return &grpc.RegisterUserResponse{
-		ErrorCode: 0,
 		UserId:    int32(userId),
+		ErrorCode: 0,
 	}
 }
