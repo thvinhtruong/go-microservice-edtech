@@ -1,16 +1,16 @@
 package interactor
 
 import (
-	"SepFirst/UserService/app/domain/repository"
+	db "SepFirst/UserService/app/interface/db/mysql/sqlc/"
 	"SepFirst/UserService/app/usecase/dto"
 	"context"
 )
 
 type AdminUsecase struct {
-	adminRepo repository.AdminRepository
+	adminRepo db.Repository
 }
 
-func NewAdminUsecase(adminRepo repository.Repository) *AdminUsecase {
+func NewAdminUsecase(adminRepo db.Repository) *AdminUsecase {
 	return &AdminUsecase{adminRepo: adminRepo}
 }
 
@@ -24,7 +24,7 @@ func (a *AdminUsecase) GetAllUsers(ctx context.Context) ([]dto.UserResponse, err
 		results = append(results, dto.UserResponse{
 			FullName: user.FullName,
 			Email:    user.Email,
-			Username: user.Username,
+			Phone:    user.Phone,
 			Gender:   user.Gender,
 		})
 	}

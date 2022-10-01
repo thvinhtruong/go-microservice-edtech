@@ -5,6 +5,8 @@ import (
 	"SepFirst/UserService/app/interface/business"
 	"SepFirst/UserService/app/usecase/dto"
 	"context"
+
+	"github.com/jinzhu/copier"
 )
 
 type ZUserServiceServer struct {
@@ -37,9 +39,27 @@ func (s *ZUserServiceServer) RegisterUser(ctx context.Context, request *Register
 		Password: request.Password,
 		Email:    request.Email,
 		Gender:   request.Gender,
-		Username: request.Username,
 	}
-	return business.Instance.RegisterUser(ctx, user), nil
+
+	user_response, err := business.Instance.RegisterUser(ctx, user)
+	if err != nil {
+		return &RegisterUserResponse{
+			UserId:    -1,
+			ErrorCode: apperror.GetCode(err),
+		}, nil
+	}
+
+	var result RegisterUserResponse
+
+	err = copier.Copy(&user_response, &result)
+	if err != nil {
+		return &RegisterUserResponse{
+			UserId:    -1,
+			ErrorCode: apperror.GetCode(err),
+		}, nil
+	}
+
+	return &result, nil
 }
 
 func (s *ZUserServiceServer) mustEmbedUnimplementedUserServiceServer() {
