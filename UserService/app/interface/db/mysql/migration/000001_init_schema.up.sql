@@ -1,7 +1,6 @@
 CREATE TABLE IF NOT EXISTS`User` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `fullName` VARCHAR(255) NOT NULL,
-  `username` VARCHAR(255) NOT NULL,
   `gender` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `phone` VARCHAR(20) NOT NULL,
@@ -11,15 +10,14 @@ CREATE TABLE IF NOT EXISTS`User` (
 );
 
 CREATE TABLE IF NOT EXISTS `User_Password` (
-  `id` INT PRIMARY KEY NOT NULL,
-  `user_id` INT UNIQUE,
+  `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `user_id` INT UNIQUE NOT NULL,
   `password` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `Tutor` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `fullName` VARCHAR(255) NOT NULL,
-  `username` VARCHAR(255) NOT NULL,
   `gender` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `phone` VARCHAR(20) NOT NULL,
@@ -30,8 +28,8 @@ CREATE TABLE IF NOT EXISTS `Tutor` (
 );
 
 CREATE TABLE IF NOT EXISTS `Tutor_Password` (
-  `id` INT PRIMARY KEY NOT NULL,
-  `tutor_id` INT UNIQUE,
+  `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  `tutor_id` INT UNIQUE NOT NULL,
   `password` VARCHAR(255) NOT NULL
 );
 
@@ -43,13 +41,9 @@ CREATE TABLE IF NOT EXISTS `Admin` (
   `dateupdate` DATETIME NOT NULL
 );
 
-CREATE UNIQUE INDEX `User_index_0` ON `User` (`username`);
-
 CREATE UNIQUE INDEX `User_index_1` ON `User` (`email`);
 
 CREATE UNIQUE INDEX `User_index_2` ON `User` (`phone`);
-
-CREATE UNIQUE INDEX `Tutor_index_3` ON `Tutor` (`username`);
 
 CREATE UNIQUE INDEX `Tutor_index_4` ON `Tutor` (`email`);
 

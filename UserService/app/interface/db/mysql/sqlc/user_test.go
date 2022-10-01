@@ -4,17 +4,18 @@ import (
 	"context"
 	"testing"
 
+	"SepFirst/UserService/pkg/random"
+
 	"github.com/stretchr/testify/require"
 )
 
 func TestCreateUser(t *testing.T) {
 	ctx := context.Background()
 	arg := CreateUserParams{
-		Fullname: "Bao Tam",
-		Username: "baotam",
-		Phone:    "0123456789",
-		Email:    "baotam@example.com",
-		Gender:   "male",
+		Fullname: random.RandomName(),
+		Phone:    random.RandomPhone(),
+		Email:    random.RandomEmail(),
+		Gender:   random.RandomGender(),
 	}
 
 	account, err := testQueries.CreateUser(ctx, arg)

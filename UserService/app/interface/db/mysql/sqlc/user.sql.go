@@ -11,13 +11,12 @@ import (
 )
 
 const createUser = `-- name: CreateUser :execresult
-INSERT INTO User (fullname, username, phone, email, gender, blocked, datecreated)
-VALUES(? , ? , ? , ? , ?, false, NOW())
+INSERT INTO User (fullname, phone, email, gender, blocked, datecreated)
+VALUES(?, ? , ? , ?, false, NOW())
 `
 
 type CreateUserParams struct {
 	Fullname string `json:"fullname"`
-	Username string `json:"username"`
 	Phone    string `json:"phone"`
 	Email    string `json:"email"`
 	Gender   string `json:"gender"`
@@ -26,24 +25,24 @@ type CreateUserParams struct {
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (sql.Result, error) {
 	return q.db.ExecContext(ctx, createUser,
 		arg.Fullname,
-		arg.Username,
 		arg.Phone,
 		arg.Email,
 		arg.Gender,
 	)
 }
 
-const createUserPassword = `-- name: CreateUserPassword :execresult
+const createUserPassword = `-- name: CreateUserPassword :exec
 INSERT INTO User_Password (user_id, password) VALUES(?, ?)
 `
 
 type CreateUserPasswordParams struct {
-	UserID   sql.NullInt32 `json:"user_id"`
-	Password string        `json:"password"`
+	UserID   int32  `json:"user_id"`
+	Password string `json:"password"`
 }
 
-func (q *Queries) CreateUserPassword(ctx context.Context, arg CreateUserPasswordParams) (sql.Result, error) {
-	return q.db.ExecContext(ctx, createUserPassword, arg.UserID, arg.Password)
+func (q *Queries) CreateUserPassword(ctx context.Context, arg CreateUserPasswordParams) error {
+	_, err := q.db.ExecContext(ctx, createUserPassword, arg.UserID, arg.Password)
+	return err
 }
 
 const deleteUser = `-- name: DeleteUser :exec
@@ -56,7 +55,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, fullname, username, gender, email, phone, blocked, datecreated, dateupdated FROM User WHERE id = ? AND blocked = 0 LIMIT 1
+SELECT id, fullname, gender, email, phone, blocked, datecreated, dateupdated FROM User WHERE id = ? AND blocked = 0 LIMIT 1
 `
 
 func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
@@ -65,7 +64,6 @@ func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Fullname,
-		&i.Username,
 		&i.Gender,
 		&i.Email,
 		&i.Phone,
@@ -77,7 +75,7 @@ func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, fullname, username, gender, email, phone, blocked, datecreated, dateupdated FROM User WHERE blocked = false
+SELECT id, fullname, gender, email, phone, blocked, datecreated, dateupdated FROM User WHERE blocked = false
 ORDER BY id
 LIMIT 1
 OFFSET 1
@@ -95,7 +93,6 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 		if err := rows.Scan(
 			&i.ID,
 			&i.Fullname,
-			&i.Username,
 			&i.Gender,
 			&i.Email,
 			&i.Phone,
@@ -117,13 +114,12 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 }
 
 const updateUserInfo = `-- name: UpdateUserInfo :execresult
-UPDATE User SET fullname = ?, username = ?, phone = ?, email = ?, gender = ?
+UPDATE User SET fullname = ?, phone = ?, email = ?, gender = ?
 WHERE id = ? AND blocked = 0
 `
 
 type UpdateUserInfoParams struct {
 	Fullname string `json:"fullname"`
-	Username string `json:"username"`
 	Phone    string `json:"phone"`
 	Email    string `json:"email"`
 	Gender   string `json:"gender"`
@@ -133,7 +129,6 @@ type UpdateUserInfoParams struct {
 func (q *Queries) UpdateUserInfo(ctx context.Context, arg UpdateUserInfoParams) (sql.Result, error) {
 	return q.db.ExecContext(ctx, updateUserInfo,
 		arg.Fullname,
-		arg.Username,
 		arg.Phone,
 		arg.Email,
 		arg.Gender,
@@ -146,8 +141,8 @@ UPDATE User_Password SET password = ? WHERE user_id = ?
 `
 
 type UpdateUserPasswordParams struct {
-	Password string        `json:"password"`
-	UserID   sql.NullInt32 `json:"user_id"`
+	Password string `json:"password"`
+	UserID   int32  `json:"user_id"`
 }
 
 func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (sql.Result, error) {

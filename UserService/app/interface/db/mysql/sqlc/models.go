@@ -20,7 +20,6 @@ type Admin struct {
 type Tutor struct {
 	ID          int32         `json:"id"`
 	Fullname    string        `json:"fullname"`
-	Username    string        `json:"username"`
 	Gender      string        `json:"gender"`
 	Email       string        `json:"email"`
 	Phone       string        `json:"phone"`
@@ -31,15 +30,14 @@ type Tutor struct {
 }
 
 type TutorPassword struct {
-	ID       int32         `json:"id"`
-	TutorID  sql.NullInt32 `json:"tutor_id"`
-	Password string        `json:"password"`
+	ID       int32  `json:"id"`
+	TutorID  int32  `json:"tutor_id"`
+	Password string `json:"password"`
 }
 
 type User struct {
 	ID          int32        `json:"id"`
 	Fullname    string       `json:"fullname"`
-	Username    string       `json:"username"`
 	Gender      string       `json:"gender"`
 	Email       string       `json:"email"`
 	Phone       string       `json:"phone"`
@@ -49,7 +47,7 @@ type User struct {
 }
 
 type UserPassword struct {
-	ID       int32         `json:"id"`
-	UserID   sql.NullInt32 `json:"user_id"`
-	Password string        `json:"password"`
+	ID       int32  `json:"id"`
+	UserID   int32  `json:"user_id"`
+	Password string `json:"password"`
 }
