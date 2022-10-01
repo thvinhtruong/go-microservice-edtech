@@ -11,12 +11,11 @@ import (
 )
 
 const createTutor = `-- name: CreateTutor :execresult
-INSERT INTO Tutor (fullname, username, email, phone, gender) VALUES(? , ? , ? , ? , ? )
+INSERT INTO Tutor (fullname, email, phone, gender, validate, adminId, datecreated) VALUES(? , ? , ? , ?, false, 0, NOW())
 `
 
 type CreateTutorParams struct {
 	Fullname string `json:"fullname"`
-	Username string `json:"username"`
 	Email    string `json:"email"`
 	Phone    string `json:"phone"`
 	Gender   string `json:"gender"`
@@ -25,7 +24,6 @@ type CreateTutorParams struct {
 func (q *Queries) CreateTutor(ctx context.Context, arg CreateTutorParams) (sql.Result, error) {
 	return q.db.ExecContext(ctx, createTutor,
 		arg.Fullname,
-		arg.Username,
 		arg.Email,
 		arg.Phone,
 		arg.Gender,
@@ -37,8 +35,8 @@ INSERT INTO Tutor_Password (tutor_id, password) VALUES(?, ?)
 `
 
 type CreateTutorPasswordParams struct {
-	TutorID  sql.NullInt32 `json:"tutor_id"`
-	Password string        `json:"password"`
+	TutorID  int32  `json:"tutor_id"`
+	Password string `json:"password"`
 }
 
 func (q *Queries) CreateTutorPassword(ctx context.Context, arg CreateTutorPasswordParams) (sql.Result, error) {
@@ -55,7 +53,7 @@ func (q *Queries) DeleteTutor(ctx context.Context, id int32) error {
 }
 
 const getTutor = `-- name: GetTutor :one
-SELECT id, fullname, username, gender, email, phone, validate, adminid, datecreated, dateupdated FROM Tutor WHERE id = ? AND blocked = 0 LIMIT 1
+SELECT id, fullname, gender, email, phone, validate, adminid, datecreated, dateupdated FROM Tutor WHERE id = ? AND blocked = 0 LIMIT 1
 `
 
 func (q *Queries) GetTutor(ctx context.Context, id int32) (Tutor, error) {
@@ -64,7 +62,6 @@ func (q *Queries) GetTutor(ctx context.Context, id int32) (Tutor, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Fullname,
-		&i.Username,
 		&i.Gender,
 		&i.Email,
 		&i.Phone,
@@ -76,26 +73,38 @@ func (q *Queries) GetTutor(ctx context.Context, id int32) (Tutor, error) {
 	return i, err
 }
 
-const updateTutor = `-- name: UpdateTutor :execresult
-UPDATE Tutor SET fullname = ?, username = ?, email = ?, phone = ?, gender = ? WHERE id = ? AND blocked = 0
+const updateTutorInfo = `-- name: UpdateTutorInfo :execresult
+UPDATE Tutor SET fullname = ?, email = ?, phone = ?, gender = ? WHERE id = ? AND blocked = 0
 `
 
-type UpdateTutorParams struct {
+type UpdateTutorInfoParams struct {
 	Fullname string `json:"fullname"`
-	Username string `json:"username"`
 	Email    string `json:"email"`
 	Phone    string `json:"phone"`
 	Gender   string `json:"gender"`
 	ID       int32  `json:"id"`
 }
 
-func (q *Queries) UpdateTutor(ctx context.Context, arg UpdateTutorParams) (sql.Result, error) {
-	return q.db.ExecContext(ctx, updateTutor,
+func (q *Queries) UpdateTutorInfo(ctx context.Context, arg UpdateTutorInfoParams) (sql.Result, error) {
+	return q.db.ExecContext(ctx, updateTutorInfo,
 		arg.Fullname,
-		arg.Username,
 		arg.Email,
 		arg.Phone,
 		arg.Gender,
 		arg.ID,
 	)
+}
+
+const updateTutorPassword = `-- name: UpdateTutorPassword :exec
+UPDATE Tutor_Password SET password = ? WHERE tutor_id = ?
+`
+
+type UpdateTutorPasswordParams struct {
+	Password string `json:"password"`
+	TutorID  int32  `json:"tutor_id"`
+}
+
+func (q *Queries) UpdateTutorPassword(ctx context.Context, arg UpdateTutorPasswordParams) error {
+	_, err := q.db.ExecContext(ctx, updateTutorPassword, arg.Password, arg.TutorID)
+	return err
 }
