@@ -55,7 +55,7 @@ func ValidateUserAuth(username string, email string, password string) error {
 }
 
 func ValidateUserEmptyField(req UserRequest) error {
-	if len(req.Fullname) == 0 || len(req.Username) == 0 ||
+	if len(req.Fullname) == 0 || len(req.Phone) == 0 ||
 		len(req.Password) == 0 || len(req.Email) == 0 || len(req.Gender) == 0 {
 		return apperror.ErrorEmptyField
 	}

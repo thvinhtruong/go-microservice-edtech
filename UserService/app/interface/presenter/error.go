@@ -2,6 +2,12 @@ package presenter
 
 import "SepFirst/UserService/app/apperror"
 
+type ErrorResponse struct {
+	Code    int32  `json:"code"`
+	Message string `json:"message"`
+	Field   string `json:"field"`
+}
+
 func getErrorField(err error) (field string) {
 	switch err {
 	case nil:
@@ -46,4 +52,11 @@ func getErrorField(err error) (field string) {
 	default:
 		return "Unidentified Error"
 	}
+}
+
+func GetErrorResponse(err error) (response ErrorResponse) {
+	response.Code = apperror.GetCode(err)
+	response.Message = err.Error()
+	response.Field = getErrorField(err)
+	return
 }

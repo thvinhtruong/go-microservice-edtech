@@ -1,8 +1,8 @@
 package business
 
 import (
-	"SepFirst/UserService/app/interface/grpc"
-	"SepFirst/UserService/app/interface/persistence/rdbms/sqlconnection"
+	"SepFirst/UserService/app/interface/presenter"
+	"SepFirst/UserService/app/interface/sqlconnection"
 	"SepFirst/UserService/app/registry"
 	"SepFirst/UserService/app/usecase/dto"
 	"context"
@@ -17,18 +17,21 @@ func init() {
 	Instance = &Business{}
 }
 
-func (b *Business) RegisterUser(ctx context.Context, user dto.UserRequest) *grpc.RegisterUserResponse {
-	access := registry.BuildUserAccessPoint(false, sqlconnection.DBConn)
-
+func (b *Business) RegisterUser(ctx context.Context, user dto.UserRequest) (*presenter.Response, error) {
+	access := registry.BuildUserAccessPoint(sqlconnection.DBConn)
 	userId, err := access.Service.RegisterUser(ctx, user)
 	if err != nil {
-		return &grpc.RegisterUserResponse{
-			ErrorCode: -1,
-			UserId:    -1,
-		}
+		return &presenter.Response{
+			Data:   nil,
+			Errors: presenter.GetErrorResponse(err),
+		}, err
 	}
-	return &grpc.RegisterUserResponse{
-		UserId:    int32(userId),
-		ErrorCode: 0,
-	}
+
+	data := presenter.SetResponse(&presenter.Response{
+		Data:   userId,
+		Errors: presenter.GetErrorResponse(err),
+	})
+
+	return data, nil
+
 }
