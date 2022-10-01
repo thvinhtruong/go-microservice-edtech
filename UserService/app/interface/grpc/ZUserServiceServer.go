@@ -3,6 +3,7 @@ package grpc
 import (
 	"SepFirst/UserService/app/apperror"
 	"SepFirst/UserService/app/interface/business"
+	"SepFirst/UserService/app/usecase/dto"
 	"context"
 )
 
@@ -31,7 +32,14 @@ func (s *ZUserServiceServer) RegisterTutor(ctx context.Context, request *Registe
 	}, nil
 }
 func (s *ZUserServiceServer) RegisterUser(ctx context.Context, request *RegisterUserRequest) (*RegisterUserResponse, error) {
-	return business.Instance.RegisterUser(ctx, request), nil
+	user := dto.UserRequest{
+		FullName: request.FullName,
+		Password: request.Password,
+		Email:    request.Email,
+		Gender:   request.Gender,
+		Username: request.Username,
+	}
+	return business.Instance.RegisterUser(ctx, user), nil
 }
 
 func (s *ZUserServiceServer) mustEmbedUnimplementedUserServiceServer() {

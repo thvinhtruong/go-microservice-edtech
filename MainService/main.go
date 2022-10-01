@@ -12,6 +12,7 @@ func main() {
 
 	configuration := config.GetInstance()
 	http.HandleFunc("/api/LoginUser", handlers.LoginUser)
+	http.HandleFunc("/api/RegisterUser", handlers.RegisterUser)
 
 	port := configuration.GetConfig(config.MAIN_SERVICE_PORT)
 
