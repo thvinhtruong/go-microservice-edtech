@@ -9,7 +9,7 @@ import (
 type Transactioner interface {
 	Rollback() error
 	Commit() error
-	ExecTx(txFunc func() error) error
+	EnableTx(txFunc func() error) error
 }
 
 type TxStore struct {
@@ -37,7 +37,7 @@ func (t *TxStore) Commit() error {
 // pass the transaction to the callback function.
 // if the callback function returns an error, rollback the transaction
 // returns a transaction object or an error
-func (t *TxStore) ExecTx(txFunc func() error) error {
+func (t *TxStore) EnableTx(txFunc func() error) error {
 	tx, err := t.db.BeginTx(context.Background(), nil)
 	if err != nil {
 		return err

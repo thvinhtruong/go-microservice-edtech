@@ -7,8 +7,8 @@ import (
 	"database/sql"
 )
 
-func NewQueries(database *sql.DB) *db.Queries {
-	return db.New(database)
+func NewQueries(database *sql.DB) *db.TxStore {
+	return db.NewTxStore(database)
 }
 
 type UserAccessPoint struct {

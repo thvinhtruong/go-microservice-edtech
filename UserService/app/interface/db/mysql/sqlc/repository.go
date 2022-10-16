@@ -8,11 +8,11 @@ import (
 type Repository interface {
 	// User
 	UserRepository
-	// Admin
-	AdminRepository
-	// Tutor
-	TutorRepository
-	// Transaction
+	// // Admin
+	// AdminRepository
+	// // Tutor
+	// TutorRepository
+	// // Transaction
 	Transaction
 }
 
