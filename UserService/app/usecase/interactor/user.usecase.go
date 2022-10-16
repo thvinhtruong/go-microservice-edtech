@@ -1,8 +1,7 @@
 package interactor
 
 import (
-	"SepFirst/UserService/app/domain/repository"
-	db "SepFirst/UserService/app/interface/db/mysql/sqlc"
+	repository "SepFirst/UserService/app/interface/db/mysql/sqlc"
 	"SepFirst/UserService/app/usecase/dto"
 	"SepFirst/UserService/pkg/hasher"
 	"context"
@@ -21,43 +20,46 @@ func NewUserUsecase(userRepo repository.Repository) *UserUsecase {
 // Transaction
 // create User and get user id generated
 // create password based on the generated user id
-func (u *UserUsecase) RegisterUser(ctx context.Context, user dto.UserRequest) (int, error) {
-	var user_record db.CreateUserParams
-	var password_record db.CreateUserPasswordParams
+func (u *UserUsecase) RegisterUser(ctx context.Context, user dto.UserRequest) (dto.UserResponse, error) {
+	var user_record repository.CreateUserParams
+	var password_record repository.CreateUserPasswordParams
+	var user_response dto.UserResponse
 	err := copier.Copy(&user_record, &user)
 	if err != nil {
-		return 0, err
+		return dto.UserResponse{}, err
 	}
 
-	hashed, err := hasher.HashPassword(user.Password)
-	if err != nil {
-		return 0, err
-	}
-
-	password_record.Password = hashed
-
-	return u.userRepo.EnableTx(ctx, func(u.userRepo) error {
-		user_id, err := u.userRepo.CreateUser(ctx, user_record)
+	err = u.userRepo.EnableTx(func() error {
+		user_result, err := u.userRepo.CreateUser(ctx, user_record)
 		if err != nil {
 			return err
 		}
 
-		id, err := user_id.LastInsertId()
+		user_id, err := user_result.LastInsertId()
 		if err != nil {
 			return err
 		}
 
-		password_record.UserID = int32(id)
+		hashed, err := hasher.HashPassword(user.Password)
+		if err != nil {
+			return err
+		}
 
-		_, err = u.userRepo.CreatePassword(ctx, password_record)
+		password_record.UserID = int32(user_id)
+		password_record.Password = hashed
+
+		err = u.userRepo.CreateUserPassword(ctx, password_record)
+		if err != nil {
+			return err
+		}
+
+		err = copier.Copy(&user_response, &user_result)
 		if err != nil {
 			return err
 		}
 
 		return nil
 	})
-}
 
-func (u *UserUsecase) UpdateUserPassword(ctx context.Context, userId int, newPassword string) error {
-	return u.userRepo.UpdateUserPassword(ctx, userId, newPassword)
+	return user_response, nil
 }

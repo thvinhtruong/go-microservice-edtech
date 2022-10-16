@@ -17,7 +17,7 @@ type UserAccessPoint struct {
 
 func BuildUserAccessPoint(db *sql.DB) *UserAccessPoint {
 	queries := NewQueries(db)
-	usecaselayer := interactor.NewUserUsecase(&queries)
+	usecaselayer := interactor.NewUserUsecase(queries)
 
 	return &UserAccessPoint{
 		Service: usecaselayer,
