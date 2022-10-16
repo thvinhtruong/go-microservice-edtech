@@ -17,6 +17,7 @@ type UserAuthRequest struct {
 }
 
 type UserResponse struct {
+	ID          int32     `json:"id"`
 	FullName    string    `json:"fullname"`
 	Email       string    `json:"email"`
 	Phone       string    `json:"phone"`
@@ -25,6 +26,7 @@ type UserResponse struct {
 }
 
 type TutorRequest struct {
+	ID       int    `json:"id"`
 	FullName string `json:"fullname"`
 	Email    string `json:"email"`
 	Phone    string `json:"phone"`
@@ -39,6 +41,7 @@ type TutorAuthRequest struct {
 }
 
 type TutorResponse struct {
+	ID          int32     `json:"id"`
 	FullName    string    `json:"fullname"`
 	Email       string    `json:"email"`
 	Phone       string    `json:"phone"`

@@ -1,16 +1,16 @@
 package interactor
 
 import (
-	db "SepFirst/UserService/app/interface/db/mysql/sqlc/"
+	repository "SepFirst/UserService/app/interface/db/mysql/sqlc"
 	"SepFirst/UserService/app/usecase/dto"
 	"context"
 )
 
 type AdminUsecase struct {
-	adminRepo db.Repository
+	adminRepo repository.Repository
 }
 
-func NewAdminUsecase(adminRepo db.Repository) *AdminUsecase {
+func NewAdminUsecase(adminRepo repository.Repository) *AdminUsecase {
 	return &AdminUsecase{adminRepo: adminRepo}
 }
 

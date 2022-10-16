@@ -6,8 +6,8 @@ import (
 )
 
 type UserService interface {
-	RegisterUser(ctx context.Context, user dto.UserRequest) (int, error)
-	UpdateUserPassword(ctx context.Context, id int, password string) error
+	RegisterUser(ctx context.Context, user dto.UserRequest) (dto.UserResponse, error)
+	//UpdateUserPassword(ctx context.Context, id int, password string) error
 }
 
 type AdminService interface {

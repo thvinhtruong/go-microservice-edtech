@@ -13,12 +13,12 @@ type Repository interface {
 	// Tutor
 	TutorRepository
 	// Transaction
-	Transactioner
+	Transaction
 }
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, arg CreateUserParams) (sql.Result, error)
-	CreateUserPassword(ctx context.Context, arg CreateUserPasswordParams) (sql.Result, error)
+	CreateUserPassword(ctx context.Context, arg CreateUserPasswordParams) error
 	GetUser(ctx context.Context, userId int32) (User, error)
 	ListUsers(ctx context.Context) ([]User, error)
 	UpdateUserInfo(ctx context.Context, arg UpdateUserInfoParams) (sql.Result, error)
@@ -38,6 +38,6 @@ type TutorRepository interface {
 	UpdateTutorPassword(ctx context.Context, arg UpdateTutorPasswordParams) (sql.Result, error)
 }
 
-type Transactioner interface {
-	EnableTx(ctx context.Context, fn func(*Queries) error) error
+type Transaction interface {
+	EnableTx(fn func() error) error
 }
