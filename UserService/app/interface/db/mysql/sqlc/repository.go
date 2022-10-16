@@ -13,7 +13,7 @@ type Repository interface {
 	// // Tutor
 	// TutorRepository
 	// // Transaction
-	Transaction
+	// Transaction
 }
 
 type UserRepository interface {
