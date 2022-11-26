@@ -8,7 +8,10 @@ droppedb:
 	docker exec -it sefi mysql -uroot -proot <<< "DROP DATABASE sefi-userService-dev;"
 
 migrateup:
-	migrate -path app/db/mysql/migration -database "mysql://root:root@tcp(localhost:3306)/sefiUserService?parseTime=true" -verbose up
+	migrate -path app/interface/db/mysql/migration -database "mysql://root:root@tcp(localhost:3306)/sefiUserService?parseTime=true" -verbose up
 
 migratedown:
-	migrate -path app/db/mysql/migration -database "mysql://root:root@tcp(localhost:3306)/sefiUserService?parseTime=true" -verbose down
+	migrate -path app/interface/db/mysql/migration -database "mysql://root:root@tcp(localhost:3306)/sefiUserService?parseTime=true" -verbose down
+
+sqlc:
+	sqlc generate

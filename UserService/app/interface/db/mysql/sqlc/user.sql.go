@@ -54,6 +54,15 @@ func (q *Queries) DeleteUser(ctx context.Context, id int32) error {
 	return err
 }
 
+const deleteUserPassword = `-- name: DeleteUserPassword :exec
+DELETE FROM User_Password WHERE user_id = ?
+`
+
+func (q *Queries) DeleteUserPassword(ctx context.Context, userID int32) error {
+	_, err := q.db.ExecContext(ctx, deleteUserPassword, userID)
+	return err
+}
+
 const getUser = `-- name: GetUser :one
 SELECT id, fullname, gender, email, phone, blocked, datecreated, dateupdated FROM User WHERE id = ? AND blocked = 0 LIMIT 1
 `

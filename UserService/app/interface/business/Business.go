@@ -1,11 +1,13 @@
 package business
 
 import (
-	"SepFirst/UserService/app/interface/presenter"
+	repository "SepFirst/UserService/app/interface/db/mysql/sqlc"
 	"SepFirst/UserService/app/interface/sqlconnection"
 	"SepFirst/UserService/app/registry"
 	"SepFirst/UserService/app/usecase/dto"
 	"context"
+
+	"github.com/jinzhu/copier"
 )
 
 type Business struct {
@@ -17,21 +19,17 @@ func init() {
 	Instance = &Business{}
 }
 
-func (b *Business) RegisterUser(ctx context.Context, user dto.UserRequest) (*presenter.Response, error) {
+func (b *Business) RegisterUser(ctx context.Context, user dto.UserRequest) (dto.UserResponse, error) {
 	access := registry.BuildUserAccessPoint(sqlconnection.DBConn)
-	userId, err := access.Service.RegisterUser(ctx, user)
+	var record repository.RegisterUserParams
+	err := copier.Copy(&record, &user)
 	if err != nil {
-		return &presenter.Response{
-			Data:   nil,
-			Errors: presenter.GetErrorResponse(err),
-		}, err
+		return dto.UserResponse{}, err
+	}
+	result, err := access.Service.RegisterUser(ctx, record)
+	if err != nil {
+		return dto.UserResponse{}, err
 	}
 
-	data := presenter.SetResponse(&presenter.Response{
-		Data:   userId,
-		Errors: presenter.GetErrorResponse(err),
-	})
-
-	return data, nil
-
+	return result, nil
 }

@@ -24,3 +24,5 @@ DELETE FROM User WHERE id = ?;
 -- name: GetUser :one
 SELECT * FROM User WHERE id = ? AND blocked = 0 LIMIT 1;
 
+-- name: DeleteUserPassword :exec
+DELETE FROM User_Password WHERE user_id = ?;

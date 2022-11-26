@@ -8,21 +8,18 @@ import (
 type Repository interface {
 	// User
 	UserRepository
-	// // Admin
+	// Admin
 	// AdminRepository
-	// // Tutor
+	// Tutor
 	// TutorRepository
-	// // Transaction
-	// Transaction
 }
 
 type UserRepository interface {
-	CreateUser(ctx context.Context, arg CreateUserParams) (sql.Result, error)
-	CreateUserPassword(ctx context.Context, arg CreateUserPasswordParams) error
-	GetUser(ctx context.Context, userId int32) (User, error)
-	ListUsers(ctx context.Context) ([]User, error)
-	UpdateUserInfo(ctx context.Context, arg UpdateUserInfoParams) (sql.Result, error)
-	UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (sql.Result, error)
+	RegisterUser(ctx context.Context, arg RegisterUserParams) (RegisterUserResult, error)
+	// GetUser(ctx context.Context, userId int32) (User, error)
+	// ListUsers(ctx context.Context) ([]User, error)
+	// UpdateUserInfo(ctx context.Context, arg UpdateUserInfoParams) (sql.Result, error)
+	// UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (sql.Result, error)
 }
 
 type AdminRepository interface {
@@ -36,8 +33,4 @@ type TutorRepository interface {
 	ListTutors(ctx context.Context) ([]Tutor, error)
 	UpdateTutorInfo(ctx context.Context, arg UpdateTutorInfoParams) (sql.Result, error)
 	UpdateTutorPassword(ctx context.Context, arg UpdateTutorPasswordParams) (sql.Result, error)
-}
-
-type Transaction interface {
-	EnableTx(fn func() error) error
 }

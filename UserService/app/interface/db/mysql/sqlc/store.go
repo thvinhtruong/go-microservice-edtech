@@ -3,19 +3,12 @@ package db
 import (
 	"context"
 	"database/sql"
-	"log"
+	"fmt"
 )
-
-type Transactioner interface {
-	Rollback() error
-	Commit() error
-	EnableTx(txFunc func() error) error
-}
 
 type TxStore struct {
 	*Queries
 	db *sql.DB
-	Transactioner
 }
 
 func NewTxStore(db *sql.DB) *TxStore {
@@ -37,27 +30,20 @@ func (t *TxStore) Commit() error {
 // pass the transaction to the callback function.
 // if the callback function returns an error, rollback the transaction
 // returns a transaction object or an error
-func (t *TxStore) EnableTx(txFunc func() error) error {
-	tx, err := t.db.BeginTx(context.Background(), nil)
+func (store *TxStore) enableTx(ctx context.Context, fn func(*Queries) error) error {
+	tx, err := store.db.BeginTx(ctx, &sql.TxOptions{})
 	if err != nil {
 		return err
 	}
 
-	t.Queries = New(tx)
-	defer func() {
-		if p := recover(); p != nil {
-			log.Println("found problem and rollback:", p)
-			tx.Rollback()
-			panic(p)
-		} else if err != nil {
-			log.Println("found problem and rollback:", err)
-			tx.Rollback()
-		} else {
-			log.Println("nothing happens, commit")
-			err = tx.Commit()
+	q := New(tx)
+	err = fn(q)
+	if err != nil {
+		if rbErr := tx.Rollback(); rbErr != nil {
+			return fmt.Errorf("tx err: %v, rb err: %v", err, rbErr)
 		}
-	}()
+		return err
+	}
 
-	err = txFunc()
-	return err
+	return tx.Commit()
 }

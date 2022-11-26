@@ -1,12 +1,10 @@
-package grpc
+package GrpcUserService
 
 import (
 	"SepFirst/UserService/app/apperror"
 	"SepFirst/UserService/app/interface/business"
 	"SepFirst/UserService/app/usecase/dto"
 	"context"
-
-	"github.com/jinzhu/copier"
 )
 
 type ZUserServiceServer struct {
@@ -38,10 +36,11 @@ func (s *ZUserServiceServer) RegisterUser(ctx context.Context, request *Register
 		FullName: request.FullName,
 		Password: request.Password,
 		Email:    request.Email,
+		Phone:    request.Phone,
 		Gender:   request.Gender,
 	}
 
-	user_response, err := business.Instance.RegisterUser(ctx, user)
+	record, err := business.Instance.RegisterUser(ctx, user)
 	if err != nil {
 		return &RegisterUserResponse{
 			UserId:    -1,
@@ -49,19 +48,12 @@ func (s *ZUserServiceServer) RegisterUser(ctx context.Context, request *Register
 		}, nil
 	}
 
-	var result RegisterUserResponse
-
-	err = copier.Copy(&user_response, &result)
-	if err != nil {
-		return &RegisterUserResponse{
-			UserId:    -1,
-			ErrorCode: apperror.GetCode(err),
-		}, nil
+	result := RegisterUserResponse{
+		UserId: record.ID,
 	}
 
 	return &result, nil
 }
 
 func (s *ZUserServiceServer) mustEmbedUnimplementedUserServiceServer() {
-
 }

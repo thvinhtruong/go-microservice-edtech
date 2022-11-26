@@ -49,8 +49,8 @@ CREATE UNIQUE INDEX `Tutor_index_4` ON `Tutor` (`email`);
 
 CREATE UNIQUE INDEX `Tutor_index_5` ON `Tutor` (`phone`);
 
-ALTER TABLE `User_Password` ADD FOREIGN KEY (`user_id`) REFERENCES `User` (`id`);
+ALTER TABLE `User_Password` ADD FOREIGN KEY (`user_id`) REFERENCES `User` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `Tutor` ADD FOREIGN KEY (`adminId`) REFERENCES `Admin` (`id`);
+ALTER TABLE `Tutor` ADD FOREIGN KEY (`adminId`) REFERENCES `Admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE `Tutor_Password` ADD FOREIGN KEY (`tutor_id`) REFERENCES `Tutor` (`id`);
+ALTER TABLE `Tutor_Password` ADD FOREIGN KEY (`tutor_id`) REFERENCES `Tutor` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

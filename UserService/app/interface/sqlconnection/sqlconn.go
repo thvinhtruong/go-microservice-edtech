@@ -5,18 +5,34 @@ import (
 	"database/sql"
 	"log"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var (
 	DBConn *sql.DB
+	driver = "mysql"
+	source = "root:root@tcp(localhost:3306)/sefiUserService?parseTime=true"
 )
 
-func Init(cfg config.SConfig) {
+func init() {
 	var err error
-	DBConn, err = OpenConnection(cfg)
+
+	// configuration := config.GetInstance()
+	// fmt.Println(configuration.GetConfig(config.MYSQL_USERNAME))
+	// DBConn, err = sql.Open("mysql", fmt.Sprintf(
+	// 	"%v:%v@tcp(%v:%v)/%v?parseTime=true",
+	// 	configuration.GetConfig(config.MYSQL_USERNAME),
+	// 	configuration.GetConfig(config.MYSQL_PASSWORD),
+	// 	configuration.GetConfig(config.USER_SERVICE_HOST),
+	// 	configuration.GetConfig(config.USER_SERVICE_PORT),
+	// 	"sefiUserService",
+	// ))
+
+	DBConn, err = sql.Open(driver, source)
+
 	if err != nil {
-		PrintInfo(cfg, err)
-		Init(cfg)
+		log.Fatal("cannot connect to db:", err)
 	}
 
 	DBConn.SetMaxOpenConns(100)
@@ -24,22 +40,18 @@ func Init(cfg config.SConfig) {
 	DBConn.SetConnMaxLifetime(time.Minute * 3)
 
 	if err = DBConn.Ping(); err != nil {
-		PrintInfo(cfg, err)
-		Init(cfg)
+		log.Fatal("cannot ping db:", err)
 	}
 
-	log.Println("Successfully connected to database")
+	log.Println("Connected to database")
 }
 
-// OpenConnection opens a connection to the database.
-func OpenConnection(cfg config.SConfig) (*sql.DB, error) {
+func GetDB() *sql.DB {
+	return DBConn
+}
 
-	db, err := sql.Open("mysql", cfg.GetConfig(config.USER_SERVICE_HOST).(string))
-	if err != nil {
-		return nil, err
-	}
-
-	return db, nil
+func CloseDB() {
+	DBConn.Close()
 }
 
 func PrintInfo(config config.SConfig, err error) {
