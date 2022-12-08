@@ -3,11 +3,11 @@ package handlers
 import (
 	GrpcUserService "SepFirst/MainService/GrpcClients/UserService"
 	"SepFirst/MainService/business"
-	"SepFirst/MainService/errors"
 	_struct "SepFirst/MainService/struct"
 	"SepFirst/MainService/utils"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -28,16 +28,26 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	Password := r.FormValue("Password")
 	FullName := r.FormValue("FullName")
 	fmt.Printf("%v %v %v\n", PhoneNumber, Password, FullName)
+	registerRequest := GrpcUserService.RegisterUserRequest{
+		// Phone: PhoneNumber,
+		Password: Password,
+		FullName: FullName,
+	}
+	response := business.RegisterUser(&registerRequest)
+	log.Println(response)
 	message := _struct.ApiMessage{
-		ErrorCode: errors.UNSUPPORTED_YET,
-		Message:   "",
-		Data:      "",
+		ErrorCode: response.ErrorCode,
+		Message:   "success",
+		Data:      utils.Convert(_struct.GetRegisterUserResponse(response)),
 	}
 	returnString := utils.Convert(message)
-	
+
 	//Allow CORS here By * or specific origin
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-	fmt.Fprintf(w, returnString)
+	//Setting content type to json
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(returnString))
+
 }

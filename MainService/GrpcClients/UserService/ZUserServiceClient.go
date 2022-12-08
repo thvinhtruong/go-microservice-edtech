@@ -4,6 +4,8 @@ import (
 	"SepFirst/MainService/config"
 	"context"
 	"fmt"
+	"log"
+
 	"google.golang.org/grpc"
 )
 
@@ -45,6 +47,7 @@ func (c *ZUserServiceClient) LoginUser(request *LoginUserRequest) *LoginUserResp
 
 func (c *ZUserServiceClient) RegisterUser(request *RegisterUserRequest) *RegisterUserResponse {
 	response, _ := c.innerClient.RegisterUser(context.Background(), request)
+	log.Println("RegisterUser response: ", response)
 	return response
 }
 
