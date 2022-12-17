@@ -1,10 +1,10 @@
 package business
 
 import (
-	"SepFirst/UserService/app/usecase/dto"
-	"SepFirst/UserService/config"
 	"context"
 	"fmt"
+	"server/UserService/app/dto"
+	"server/UserService/config"
 	"testing"
 )
 
@@ -27,10 +27,9 @@ func (t *TConfig) GetConfig(key config.ConfigKey) interface{} {
 func TestBusiness_RegisterUser(t *testing.T) {
 	fmt.Println(Instance)
 	result, err := Instance.RegisterUser(context.Background(), dto.UserRequest{
-		FullName: "cjanjcacssa",
-		Password: "cjabnjscbsac",
-		Email:    "cjabcjabca",
-		Phone:    "197312371931",
+		FullName: "Bao",
+		Password: "Bao",
+		Phone:    "0912314342532",
 		Gender:   "male",
 	})
 

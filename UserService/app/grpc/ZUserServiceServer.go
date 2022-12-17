@@ -1,10 +1,12 @@
 package GrpcUserService
 
 import (
-	"SepFirst/UserService/app/apperror"
-	"SepFirst/UserService/app/interface/business"
-	"SepFirst/UserService/app/usecase/dto"
 	"context"
+	"server/UserService/app/apperror"
+	"server/UserService/app/business"
+	"server/UserService/app/dto"
+
+	"github.com/jinzhu/copier"
 )
 
 type ZUserServiceServer struct {
@@ -32,10 +34,10 @@ func (s *ZUserServiceServer) RegisterTutor(ctx context.Context, request *Registe
 	}, nil
 }
 func (s *ZUserServiceServer) RegisterUser(ctx context.Context, request *RegisterUserRequest) (*RegisterUserResponse, error) {
+	var result *RegisterUserResponse
 	user := dto.UserRequest{
 		FullName: request.FullName,
 		Password: request.Password,
-		Email:    request.Email,
 		Phone:    request.Phone,
 		Gender:   request.Gender,
 	}
@@ -48,11 +50,15 @@ func (s *ZUserServiceServer) RegisterUser(ctx context.Context, request *Register
 		}, nil
 	}
 
-	result := RegisterUserResponse{
-		UserId: record.ID,
+	err = copier.Copy(&result, &record)
+	if err != nil {
+		return &RegisterUserResponse{
+			UserId:    -1,
+			ErrorCode: apperror.GetCode(err),
+		}, nil
 	}
 
-	return &result, nil
+	return result, nil
 }
 
 func (s *ZUserServiceServer) mustEmbedUnimplementedUserServiceServer() {

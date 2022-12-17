@@ -2,7 +2,6 @@ CREATE TABLE IF NOT EXISTS`User` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `fullName` VARCHAR(255) NOT NULL,
   `gender` VARCHAR(255) NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
   `phone` VARCHAR(20) NOT NULL,
   `blocked` BOOL NOT NULL,
   `datecreated` DATETIME NOT NULL,
@@ -19,7 +18,6 @@ CREATE TABLE IF NOT EXISTS `Tutor` (
   `id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
   `fullName` VARCHAR(255) NOT NULL,
   `gender` VARCHAR(255) NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
   `phone` VARCHAR(20) NOT NULL,
   `validate` VARCHAR(255) NOT NULL,
   `adminId` INT,
@@ -41,13 +39,9 @@ CREATE TABLE IF NOT EXISTS `Admin` (
   `dateupdate` DATETIME NOT NULL
 );
 
-CREATE UNIQUE INDEX `User_index_1` ON `User` (`email`);
+CREATE UNIQUE INDEX `User_index_1` ON `User` (`phone`);
 
-CREATE UNIQUE INDEX `User_index_2` ON `User` (`phone`);
-
-CREATE UNIQUE INDEX `Tutor_index_4` ON `Tutor` (`email`);
-
-CREATE UNIQUE INDEX `Tutor_index_5` ON `Tutor` (`phone`);
+CREATE UNIQUE INDEX `Tutor_index_1` ON `Tutor` (`phone`);
 
 ALTER TABLE `User_Password` ADD FOREIGN KEY (`user_id`) REFERENCES `User` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 

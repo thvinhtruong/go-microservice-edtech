@@ -1,4 +1,4 @@
-module SepFirst/MainService
+module server/MainService
 
 go 1.18
 

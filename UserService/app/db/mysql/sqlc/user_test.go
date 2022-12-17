@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"SepFirst/UserService/pkg/random"
+	"server/UserService/pkg/random"
 
 	"github.com/stretchr/testify/require"
 )

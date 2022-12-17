@@ -4,22 +4,19 @@ import "time"
 
 type UserRequest struct {
 	FullName string `json:"fullname"`
-	Email    string `json:"email"`
 	Phone    string `json:"phone"`
 	Password string `json:"password"`
 	Gender   string `json:"gender"`
 }
 
 type UserAuthRequest struct {
-	Email    string `json:"email"`
-	Username string `json:"username"`
+	Phone    string `json:"phone"`
 	Password string `json:"password"`
 }
 
 type UserResponse struct {
 	ID          int32     `json:"id"`
 	FullName    string    `json:"fullname"`
-	Email       string    `json:"email"`
 	Phone       string    `json:"phone"`
 	Gender      string    `json:"gender"`
 	DateCreated time.Time `json:"date_created"`
@@ -28,7 +25,6 @@ type UserResponse struct {
 type TutorRequest struct {
 	ID       int    `json:"id"`
 	FullName string `json:"fullname"`
-	Email    string `json:"email"`
 	Phone    string `json:"phone"`
 	Password string `json:"password"`
 	Gender   string `json:"gender"`

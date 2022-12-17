@@ -1,7 +1,7 @@
 package hasher
 
 import (
-	"SepFirst/UserService/app/apperror"
+	"server/UserService/app/apperror"
 
 	"golang.org/x/crypto/bcrypt"
 )

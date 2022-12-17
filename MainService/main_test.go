@@ -1,8 +1,8 @@
 package main
 
 import (
-	GrpcUserService "SepFirst/MainService/GrpcClients/UserService"
-	"SepFirst/MainService/business"
+	GrpcUserService "server/MainService/GrpcClients/UserService"
+	"server/MainService/business"
 	"testing"
 )
 

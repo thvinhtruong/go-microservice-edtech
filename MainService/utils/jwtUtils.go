@@ -1,9 +1,10 @@
 package utils
 
 import (
-	"SepFirst/MainService/config"
 	"errors"
 	"fmt"
+	"server/MainService/config"
+
 	"github.com/golang-jwt/jwt/v4"
 )
 

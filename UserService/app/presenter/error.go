@@ -1,6 +1,6 @@
 package presenter
 
-import "SepFirst/UserService/app/apperror"
+import "server/UserService/app/apperror"
 
 type ErrorResponse struct {
 	Code    int32  `json:"code"`

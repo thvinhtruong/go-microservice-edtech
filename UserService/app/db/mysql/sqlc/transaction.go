@@ -1,8 +1,8 @@
 package db
 
 import (
-	"SepFirst/UserService/pkg/hasher"
 	"context"
+	"server/UserService/pkg/hasher"
 )
 
 type RegisterUserParams struct {

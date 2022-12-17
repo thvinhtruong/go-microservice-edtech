@@ -1,9 +1,9 @@
 package usecase
 
 import (
-	repository "SepFirst/UserService/app/interface/db/mysql/sqlc"
-	"SepFirst/UserService/app/usecase/dto"
 	"context"
+	repository "server/UserService/app/db/mysql/sqlc"
+	"server/UserService/app/dto"
 )
 
 type UserService interface {

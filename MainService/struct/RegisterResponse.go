@@ -1,7 +1,7 @@
 package _struct
 
 import (
-	GrpcUserService "SepFirst/MainService/GrpcClients/UserService"
+	GrpcUserService "server/MainService/GrpcClients/UserService"
 )
 
 type RegisterUserResponse struct {

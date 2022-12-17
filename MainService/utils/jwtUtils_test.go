@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"SepFirst/MainService/config"
+	"server/MainService/config"
 	"testing"
 )
 

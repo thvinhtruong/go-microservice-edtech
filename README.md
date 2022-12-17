@@ -1,6 +1,6 @@
 # Go Microservice Edtech Template
 
-This is a template for building a microservice with Go, Gin, Gorm, and RabbitMQ.
+This is a template for building a microservice in Edtech with Go, Gin, Gorm, and RabbitMQ.
 ## How to use
 1. Clone this repository
 2. Run `make init` to install dependencies

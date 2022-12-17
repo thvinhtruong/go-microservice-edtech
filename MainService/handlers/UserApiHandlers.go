@@ -1,14 +1,14 @@
 package handlers
 
 import (
-	GrpcUserService "SepFirst/MainService/GrpcClients/UserService"
-	"SepFirst/MainService/business"
-	_struct "SepFirst/MainService/struct"
-	"SepFirst/MainService/utils"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	GrpcUserService "server/MainService/GrpcClients/UserService"
+	"server/MainService/business"
+	_struct "server/MainService/struct"
+	"server/MainService/utils"
 )
 
 func LoginUser(w http.ResponseWriter, r *http.Request) {

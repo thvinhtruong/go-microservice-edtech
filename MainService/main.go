@@ -1,11 +1,11 @@
 package main
 
 import (
-	"SepFirst/MainService/config"
-	"SepFirst/MainService/handlers"
 	"fmt"
 	"log"
 	"net/http"
+	"server/MainService/config"
+	"server/MainService/handlers"
 )
 
 func main() {

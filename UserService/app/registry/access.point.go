@@ -1,10 +1,10 @@
 package registry
 
 import (
-	db "SepFirst/UserService/app/interface/db/mysql/sqlc"
-	"SepFirst/UserService/app/usecase"
-	"SepFirst/UserService/app/usecase/interactor"
 	"database/sql"
+	db "server/UserService/app/db/mysql/sqlc"
+	"server/UserService/app/usecase"
+	"server/UserService/app/usecase/interactor"
 )
 
 func NewQueries(database *sql.DB) *db.TxStore {

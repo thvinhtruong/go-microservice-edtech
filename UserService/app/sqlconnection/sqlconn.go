@@ -1,9 +1,9 @@
 package sqlconnection
 
 import (
-	"SepFirst/UserService/config"
 	"database/sql"
 	"log"
+	"server/UserService/config"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -12,7 +12,7 @@ import (
 var (
 	DBConn *sql.DB
 	driver = "mysql"
-	source = "root:root@tcp(localhost:3306)/sefiUserService?parseTime=true"
+	source = "root:root@tcp(localhost:3306)/test_db?parseTime=true"
 )
 
 func init() {

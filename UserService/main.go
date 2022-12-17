@@ -1,12 +1,13 @@
 package main
 
 import (
-	grpc2 "SepFirst/UserService/app/interface/grpc"
-	config "SepFirst/UserService/config"
 	"fmt"
-	"google.golang.org/grpc"
 	"log"
 	"net"
+	grpc2 "server/UserService/app/grpc"
+	config "server/UserService/config"
+
+	"google.golang.org/grpc"
 )
 
 func main() {

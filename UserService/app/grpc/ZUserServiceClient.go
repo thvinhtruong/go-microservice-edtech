@@ -1,9 +1,9 @@
 package GrpcUserService
 
 import (
-	"SepFirst/UserService/config"
 	"context"
 	"fmt"
+	"server/UserService/config"
 
 	"google.golang.org/grpc"
 )

@@ -1,9 +1,10 @@
 package interactor
 
 import (
-	repository "SepFirst/UserService/app/interface/db/mysql/sqlc"
-	"SepFirst/UserService/app/usecase/dto"
 	"context"
+	db "server/UserService/app/db/mysql/sqlc"
+	"server/UserService/app/dto"
+	repository "server/UserService/app/interface"
 
 	"github.com/jinzhu/copier"
 )
@@ -19,7 +20,7 @@ func NewUserUsecase(userRepo repository.Repository) *UserUsecase {
 // Transaction
 // create User and get user id generated
 // create password based on the generated user id
-func (u *UserUsecase) RegisterUser(ctx context.Context, user repository.RegisterUserParams) (dto.UserResponse, error) {
+func (u *UserUsecase) RegisterUser(ctx context.Context, user db.RegisterUserParams) (dto.UserResponse, error) {
 	var result dto.UserResponse
 
 	// create user

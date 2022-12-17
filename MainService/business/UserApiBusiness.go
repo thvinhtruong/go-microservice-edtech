@@ -1,6 +1,6 @@
 package business
 
-import GrpcUserService "SepFirst/MainService/GrpcClients/UserService"
+import GrpcUserService "server/MainService/GrpcClients/UserService"
 
 func LoginUser(request *GrpcUserService.LoginUserRequest) *GrpcUserService.LoginUserResponse {
 	return GrpcUserService.INSTANCE.LoginUser(request)
