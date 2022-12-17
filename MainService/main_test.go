@@ -8,7 +8,6 @@ import (
 
 func setupSuite(tb testing.TB) func(tb testing.TB) {
 	return func(tb testing.TB) {
-
 	}
 }
 
@@ -18,8 +17,8 @@ func TestLoginUser(t *testing.T) {
 	defer teardownSuite(t)
 
 	got := business.LoginUser(&GrpcUserService.LoginUserRequest{
-		Username: "Bao",
-		Password: "Tam",
+		Phone:    "918231893713",
+		Password: "Bao Yeu Tam",
 	})
 	want := GrpcUserService.LoginUserResponse{
 		UserId:    -1,
@@ -37,7 +36,7 @@ func TestLoginTutor(t *testing.T) {
 	defer teardownSuite(t)
 
 	got := business.LoginTutor(&GrpcUserService.LoginTutorRequest{
-		Username: "Bao",
+		Phone:    "918231893713",
 		Password: "Tam",
 	})
 	want := GrpcUserService.LoginTutorResponse{
@@ -56,10 +55,9 @@ func TestRegisterUser(t *testing.T) {
 	defer teardownSuite(t)
 
 	got := business.RegisterUser(&GrpcUserService.RegisterUserRequest{
-		Username: "Bao",
-		Password: "Tam",
 		FullName: "Bao",
-		Email:    "Bao@gmail.com",
+		Phone:    "183971937121",
+		Password: "Tam",
 		Blocked:  true,
 		Gender:   "Male",
 	})
@@ -79,10 +77,9 @@ func TestRegisterTutor(t *testing.T) {
 	defer teardownSuite(t)
 
 	got := business.RegisterTutor(&GrpcUserService.RegisterTutorRequest{
-		Username: "Bao",
+		Phone:    "1987392137",
 		Password: "Tam",
 		FullName: "Bao",
-		Email:    "Bao@gmail.com",
 		Blocked:  true,
 		Gender:   "Male",
 	})

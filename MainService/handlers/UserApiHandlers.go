@@ -12,10 +12,10 @@ import (
 )
 
 func LoginUser(w http.ResponseWriter, r *http.Request) {
-	Username := r.FormValue("Username")
+	Phone := r.FormValue("Phone")
 	Password := r.FormValue("Password")
 	loginRequest := GrpcUserService.LoginUserRequest{
-		Username: Username,
+		Phone:    Phone,
 		Password: Password,
 	}
 	res := business.LoginUser(&loginRequest)
