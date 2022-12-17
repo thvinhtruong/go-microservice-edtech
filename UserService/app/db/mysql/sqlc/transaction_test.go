@@ -13,7 +13,6 @@ func TestRegisterUser(t *testing.T) {
 	user1 := RegisterUserParams{
 		Fullname: "test1",
 		Phone:    "767637216736",
-		Email:    "test4@gmail.com",
 		Password: "test",
 		Gender:   "male",
 	}
