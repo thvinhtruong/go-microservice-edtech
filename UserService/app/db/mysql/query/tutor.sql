@@ -1,5 +1,5 @@
 -- name: CreateTutor :execresult
-INSERT INTO Tutor (fullname, email, phone, gender, validate, adminId, datecreated) VALUES(? , ? , ? , ?, false, 0, NOW());
+INSERT INTO Tutor (fullname, phone, gender, validate, adminId, datecreated) VALUES(?, ?, ?, false, 0, NOW());
 
 -- name: CreateTutorPassword :execresult
 INSERT INTO Tutor_Password (tutor_id, password) VALUES(?, ?);
@@ -8,7 +8,7 @@ INSERT INTO Tutor_Password (tutor_id, password) VALUES(?, ?);
 SELECT * FROM Tutor WHERE id = ? AND blocked = 0 LIMIT 1;
 
 -- name: UpdateTutorInfo :execresult
-UPDATE Tutor SET fullname = ?, email = ?, phone = ?, gender = ? WHERE id = ? AND blocked = 0;
+UPDATE Tutor SET fullname = ?, phone = ?, gender = ? WHERE id = ? AND blocked = 0;
 
 -- name: DeleteTutor :exec
 DELETE FROM Tutor WHERE id = ?;

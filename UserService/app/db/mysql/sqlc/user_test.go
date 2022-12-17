@@ -14,7 +14,6 @@ func TestCreateUser(t *testing.T) {
 	arg := CreateUserParams{
 		Fullname: random.RandomName(),
 		Phone:    random.RandomPhone(),
-		Email:    random.RandomEmail(),
 		Gender:   random.RandomGender(),
 	}
 

@@ -1,6 +1,6 @@
 -- name: CreateUser :execresult
-INSERT INTO User (fullname, phone, email, gender, blocked, datecreated)
-VALUES(?, ? , ? , ?, false, NOW());
+INSERT INTO User (fullname, phone, gender, blocked, datecreated)
+VALUES(?, ? , ?, false, NOW());
 
 -- name: CreateUserPassword :exec
 INSERT INTO User_Password (user_id, password) VALUES(?, ?);
@@ -12,7 +12,7 @@ LIMIT 1
 OFFSET 1;
 
 -- name: UpdateUserInfo :execresult
-UPDATE User SET fullname = ?, phone = ?, email = ?, gender = ?
+UPDATE User SET fullname = ?, phone = ?, gender = ?
 WHERE id = ? AND blocked = 0;
 
 -- name: UpdateUserPassword :execresult

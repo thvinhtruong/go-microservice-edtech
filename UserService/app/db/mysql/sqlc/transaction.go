@@ -8,7 +8,6 @@ import (
 type RegisterUserParams struct {
 	Fullname string `json:"fullname"`
 	Phone    string `json:"phone"`
-	Email    string `json:"email"`
 	Password string `json:"password"`
 	Gender   string `json:"gender"`
 }
@@ -17,7 +16,6 @@ type RegisterUserResult struct {
 	ID       int64
 	FullName string `json:"fullname"`
 	Phone    string `json:"phone"`
-	Email    string `json:"email"`
 	Gender   string `json:"gender"`
 }
 
@@ -27,7 +25,6 @@ func (store *TxStore) RegisterUser(ctx context.Context, arg RegisterUserParams) 
 		user, err := q.CreateUser(ctx, CreateUserParams{
 			Fullname: arg.Fullname,
 			Phone:    arg.Phone,
-			Email:    arg.Email,
 			Gender:   arg.Gender,
 		})
 
@@ -57,7 +54,6 @@ func (store *TxStore) RegisterUser(ctx context.Context, arg RegisterUserParams) 
 		result.ID = id
 		result.FullName = arg.Fullname
 		result.Phone = arg.Phone
-		result.Email = arg.Email
 		result.Gender = arg.Gender
 
 		return nil
