@@ -9,30 +9,16 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var (
-	DBConn *sql.DB
-	driver = "mysql"
-	source = "root:root@tcp(localhost:3306)/test_db?parseTime=true"
-)
+var DBConn *sql.DB
 
 func init() {
 	var err error
-
-	// configuration := config.GetInstance()
-	// fmt.Println(configuration.GetConfig(config.MYSQL_USERNAME))
-	// DBConn, err = sql.Open("mysql", fmt.Sprintf(
-	// 	"%v:%v@tcp(%v:%v)/%v?parseTime=true",
-	// 	configuration.GetConfig(config.MYSQL_USERNAME),
-	// 	configuration.GetConfig(config.MYSQL_PASSWORD),
-	// 	configuration.GetConfig(config.USER_SERVICE_HOST),
-	// 	configuration.GetConfig(config.USER_SERVICE_PORT),
-	// 	"sefiUserService",
-	// ))
-
-	DBConn, err = sql.Open(driver, source)
+	configuration := config.Singleton
+	DBConn, err = sql.Open("mysql", "root:root@tcp(localhost:3306)/UserService?parseTime=true")
 
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
+		panic(err)
 	}
 
 	DBConn.SetMaxOpenConns(100)
@@ -43,15 +29,15 @@ func init() {
 		log.Fatal("cannot ping db:", err)
 	}
 
-	log.Println("Connected to database")
+	log.Printf("Connected to database: %v", configuration.GetConfig(config.MYSQL_DATABASE))
 }
 
 func GetDB() *sql.DB {
 	return DBConn
 }
 
-func CloseDB() {
-	DBConn.Close()
+func CloseDB() error {
+	return DBConn.Close()
 }
 
 func PrintInfo(config config.SConfig, err error) {

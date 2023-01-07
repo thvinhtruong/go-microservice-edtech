@@ -21,3 +21,5 @@ var MYSQL_PASSWORD ConfigKey = ConfigKey{key: "MysqlPassword"}
 var MYSQL_HOST ConfigKey = ConfigKey{key: "MysqlHost"}
 
 var MYSQL_PORT ConfigKey = ConfigKey{key: "MysqlPort"}
+
+var MYSQL_DATABASE ConfigKey = ConfigKey{key: "MysqlDatabase"}

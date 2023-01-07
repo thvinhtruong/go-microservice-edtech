@@ -3,6 +3,8 @@ package utils
 import (
 	"server/MainService/config"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 type TConfig struct {
@@ -51,4 +53,19 @@ func TestGenerateToken(t *testing.T) {
 
 func equalCredentials(got, want InfoInJwt) bool {
 	return got.UserId == want.UserId
+}
+
+func TestVerifyToken(t *testing.T) {
+	j := JwtUtils{c: TConfig{}}
+	want := InfoInJwt{UserId: 1}
+	token, err := j.GenerateToken(want)
+	if err != nil {
+		t.Errorf("Error: %v\n", err)
+	}
+	err = j.VerifyToken(token)
+	if err != nil {
+		t.Errorf("Error: %v\n", err)
+	}
+
+	require.NoError(t, err)
 }

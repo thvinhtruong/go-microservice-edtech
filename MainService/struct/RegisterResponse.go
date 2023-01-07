@@ -13,3 +13,13 @@ func GetRegisterUserResponse(resp *GrpcUserService.RegisterUserResponse) Registe
 		UserId: resp.UserId,
 	}
 }
+
+type RegisterTutorResponse struct {
+	TutorId int32 `json:"TutorId"`
+}
+
+func GetRegisterTutorResponse(resp *GrpcUserService.RegisterTutorResponse) RegisterTutorResponse {
+	return RegisterTutorResponse{
+		TutorId: resp.TutorId,
+	}
+}

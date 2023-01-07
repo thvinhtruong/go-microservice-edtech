@@ -11,13 +11,6 @@ type TxStore struct {
 	db *sql.DB
 }
 
-func NewTxStore(db *sql.DB) *TxStore {
-	return &TxStore{
-		Queries: New(db),
-		db:      db,
-	}
-}
-
 func (t *TxStore) Rollback() error {
 	return t.Queries.db.(*sql.Tx).Rollback()
 }
@@ -31,7 +24,7 @@ func (t *TxStore) Commit() error {
 // if the callback function returns an error, rollback the transaction
 // returns a transaction object or an error
 func (store *TxStore) enableTx(ctx context.Context, fn func(*Queries) error) error {
-	tx, err := store.db.BeginTx(ctx, &sql.TxOptions{})
+	tx, err := store.db.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}

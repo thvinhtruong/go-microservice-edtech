@@ -66,6 +66,37 @@ func (q *Queries) GetTutor(ctx context.Context, id int32) (Tutor, error) {
 	return i, err
 }
 
+const getTutorByPhone = `-- name: GetTutorByPhone :one
+SELECT id, fullname, gender, phone, validate, adminid, datecreated, dateupdated FROM Tutor WHERE phone = ? AND blocked = 0 LIMIT 1
+`
+
+func (q *Queries) GetTutorByPhone(ctx context.Context, phone string) (Tutor, error) {
+	row := q.db.QueryRowContext(ctx, getTutorByPhone, phone)
+	var i Tutor
+	err := row.Scan(
+		&i.ID,
+		&i.Fullname,
+		&i.Gender,
+		&i.Phone,
+		&i.Validate,
+		&i.Adminid,
+		&i.Datecreated,
+		&i.Dateupdated,
+	)
+	return i, err
+}
+
+const getTutorPassword = `-- name: GetTutorPassword :one
+SELECT id, tutor_id, password FROM Tutor_Password WHERE tutor_id = ? LIMIT 1
+`
+
+func (q *Queries) GetTutorPassword(ctx context.Context, tutorID int32) (TutorPassword, error) {
+	row := q.db.QueryRowContext(ctx, getTutorPassword, tutorID)
+	var i TutorPassword
+	err := row.Scan(&i.ID, &i.TutorID, &i.Password)
+	return i, err
+}
+
 const updateTutorInfo = `-- name: UpdateTutorInfo :execresult
 UPDATE Tutor SET fullname = ?, phone = ?, gender = ? WHERE id = ? AND blocked = 0
 `

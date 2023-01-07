@@ -16,6 +16,10 @@ type InfoInJwt struct {
 	UserId int
 }
 
+func NewJwtUtils(c config.Config) *JwtUtils {
+	return &JwtUtils{c: c}
+}
+
 func (i *InfoInJwt) convertObjectToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"UserId": i.UserId,
@@ -27,7 +31,6 @@ func (i *InfoInJwt) convertMapToObject(m map[string]interface{}) {
 }
 
 func (j *JwtUtils) DecodeToken(tokenString string) (*InfoInJwt, error) {
-
 	// parse tokenString
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		hmac_key := fmt.Sprintf("%v", j.c.GetConfig(config.HMAC_KEY))
@@ -39,7 +42,7 @@ func (j *JwtUtils) DecodeToken(tokenString string) (*InfoInJwt, error) {
 
 	claims := token.Claims.(jwt.MapClaims)
 	if claims.Valid() != nil {
-		return nil, errors.New("Token is invalid")
+		return nil, errors.New("token is invalid")
 	}
 	data := claims["data"].(map[string]interface{})
 
@@ -71,4 +74,23 @@ func (j *JwtUtils) GenerateToken(infoInJwt InfoInJwt) (string, error) {
 		return "", err
 	}
 	return tokenString, nil
+}
+
+func (j *JwtUtils) VerifyToken(tokenString string) error {
+	// parse tokenString
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		hmac_key := fmt.Sprintf("%v", j.c.GetConfig(config.HMAC_KEY))
+		return []byte(hmac_key), nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	claims := token.Claims.(jwt.MapClaims)
+	if claims.Valid() != nil {
+		return errors.New("token is invalid")
+	}
+
+	return nil
 }

@@ -4,15 +4,16 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	GrpcUserService "server/MainService/GrpcClients/UserService"
 	"server/MainService/config"
 	"server/MainService/handlers"
 )
 
 func main() {
-
 	configuration := config.GetInstance()
-	http.HandleFunc("/api/LoginUser", handlers.LoginUser)
-	http.HandleFunc("/api/RegisterUser", handlers.RegisterUser)
+	userApiHandler := handlers.NewUserApiHanlder(configuration, &GrpcUserService.Instance)
+	http.HandleFunc("/api/LoginUser", userApiHandler.LoginUser)
+	http.HandleFunc("/api/RegisterUser", userApiHandler.RegisterUser)
 
 	port := configuration.GetConfig(config.MAIN_SERVICE_PORT)
 

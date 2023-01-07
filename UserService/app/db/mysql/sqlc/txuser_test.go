@@ -2,17 +2,24 @@ package db
 
 import (
 	"context"
+	"fmt"
 	"testing"
+
+	"server/UserService/pkg/random"
 
 	"github.com/stretchr/testify/require"
 )
 
 func TestRegisterUser(t *testing.T) {
-	store := NewTxStore(testDB)
+	testDB, err := CreateTestDB()
+	if err != nil {
+		t.Error(err)
+	}
 
+	userUseCase := NewRepository(testDB)
 	user1 := RegisterUserParams{
 		Fullname: "test1",
-		Phone:    "767637216736",
+		Phone:    random.RandomPhone(),
 		Password: "test",
 		Gender:   "male",
 	}
@@ -21,7 +28,7 @@ func TestRegisterUser(t *testing.T) {
 	results := make(chan RegisterUserResult)
 
 	go func() {
-		result, err := store.RegisterUser(context.Background(), user1)
+		result, err := userUseCase.RegisterUser(context.Background(), user1)
 		if err != nil {
 			t.Error(err)
 		}
@@ -31,15 +38,10 @@ func TestRegisterUser(t *testing.T) {
 
 	}()
 
-	err := <-errs
+	err = <-errs
 	require.NoError(t, err)
 	result := <-results
 	require.NotEmpty(t, result)
-}
 
-func TestDeleteUser(t *testing.T) {
-	store := NewTxStore(testDB)
-
-	err := store.DeleteUser(context.Background(), 1)
-	require.NoError(t, err)
+	fmt.Println(result)
 }

@@ -3,7 +3,7 @@ syntax="proto3";
 option go_package="./GrpcUserService";
 
 message LoginUserRequest {
-    string Username=1;
+    string Phone=1;
     string Password=2;
 }
 
@@ -13,14 +13,13 @@ message LoginUserResponse {
 }
 
 message RegisterUserRequest {
-    string FullName=1;
-    string Password=2;
-    string Email=3;
-    string Phone=4;
-    string Gender=5;
-    bool Blocked=6;
-    int64 DateCreated=7;
-    int64 DateUpdated=8;
+    string Fullname=1;
+    string Phone=2;
+    string Password=3;
+    string Gender=4;
+    bool Blocked=5;
+    int64 DateCreated=6;
+    int64 DateUpdated=7;
 }
 
 message RegisterUserResponse {
@@ -29,14 +28,13 @@ message RegisterUserResponse {
 }
 
 message RegisterTutorRequest {
-    string FullName=1;
-    string Password=2;
-    string Email=3;
-    string Username=4;
-    string Gender=5;
-    bool Blocked=6;
-    int64 DateCreated=7;
-    int64 DateUpdated=8;
+    string Fullname=1;
+    string Phone=2;
+    string Password=3;
+    string Gender=4;
+    bool Blocked=5;
+    int64 DateCreated=6;
+    int64 DateUpdated=7;
 }
 
 message RegisterTutorResponse {
@@ -45,7 +43,7 @@ message RegisterTutorResponse {
 }
 
 message LoginTutorRequest {
-    string Username=1;
+    string Phone=1;
     string Password=2;
 }
 
@@ -53,6 +51,7 @@ message LoginTutorResponse {
     int32 ErrorCode=1;
     int32 TutorId=2;
 }
+
 
 service UserService {
     rpc LoginUser(LoginUserRequest) returns (LoginUserResponse);

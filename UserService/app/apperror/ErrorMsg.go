@@ -20,6 +20,7 @@ var MsgFlags = map[error]int32{
 	ErrorUsernameAlreadyExist:    20009,
 	ErrorNameAlreadyExist:        20010,
 	ErrorPasswordIncorrect:       20011,
+	ErrorUserNotFound:            20012,
 
 	ErrorInternal:         30000,
 	ErrorEntryNotExist:    30001,

@@ -18,6 +18,8 @@ var (
 	ErrorWrongDateFormat = errors.New("wrong given format for date")
 
 	ErrorPasswordIncorrect = errors.New("password is incorrect")
+
+	ErrorUserNotFound = errors.New("user not found")
 )
 
 // Client errors.

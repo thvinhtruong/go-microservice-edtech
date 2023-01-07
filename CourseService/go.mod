@@ -1,4 +1,4 @@
-module SepFirst/CouseService
+module server/CouseService
 
 go 1.18
 

@@ -7,6 +7,12 @@ INSERT INTO Tutor_Password (tutor_id, password) VALUES(?, ?);
 -- name: GetTutor :one
 SELECT * FROM Tutor WHERE id = ? AND blocked = 0 LIMIT 1;
 
+-- name: GetTutorByPhone :one
+SELECT * FROM Tutor WHERE phone = ? AND blocked = 0 LIMIT 1;
+
+-- name: GetTutorPassword :one
+SELECT * FROM Tutor_Password WHERE tutor_id = ? LIMIT 1;
+
 -- name: UpdateTutorInfo :execresult
 UPDATE Tutor SET fullname = ?, phone = ?, gender = ? WHERE id = ? AND blocked = 0;
 

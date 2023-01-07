@@ -4,15 +4,19 @@ import (
 	"fmt"
 	"log"
 	"net"
-	grpc2 "server/UserService/app/grpc"
+	db "server/UserService/app/db/mysql/sqlc"
+	GrpcUserService "server/UserService/app/grpc"
+	"server/UserService/app/sqlconnection"
 	config "server/UserService/config"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
-
-	configuration := config.GetInstance()
+	configuration := config.Singleton
+	dbconn := sqlconnection.DBConn
+	repository := db.NewRepository(dbconn)
 	host := fmt.Sprintf(
 		"%v:%v",
 		configuration.GetConfig(config.USER_SERVICE_HOST),
@@ -24,7 +28,10 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	grpc2.RegisterUserServiceServer(s, &grpc2.ZUserServiceServer{})
+	userServiceServer := GrpcUserService.NewZUserServiceServer(repository)
+
+	GrpcUserService.RegisterUserServiceServer(s, &userServiceServer)
+	reflection.Register(s)
 
 	fmt.Printf("ZUserServiceServer is listening at %v", host)
 	if err := s.Serve(lis); err != nil {

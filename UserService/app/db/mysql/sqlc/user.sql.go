@@ -59,6 +59,7 @@ func (q *Queries) DeleteUserPassword(ctx context.Context, userID int32) error {
 
 const getUser = `-- name: GetUser :one
 SELECT id, fullname, gender, phone, blocked, datecreated, dateupdated FROM User WHERE id = ? AND blocked = 0 LIMIT 1
+FOR UPDATE
 `
 
 func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
@@ -76,11 +77,42 @@ func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
 	return i, err
 }
 
+const getUserByPhone = `-- name: GetUserByPhone :one
+SELECT id, fullname, gender, phone, blocked, datecreated, dateupdated FROM User WHERE phone = ? AND blocked = 0 LIMIT 1
+FOR UPDATE
+`
+
+func (q *Queries) GetUserByPhone(ctx context.Context, phone string) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserByPhone, phone)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Fullname,
+		&i.Gender,
+		&i.Phone,
+		&i.Blocked,
+		&i.Datecreated,
+		&i.Dateupdated,
+	)
+	return i, err
+}
+
+const getUserPassword = `-- name: GetUserPassword :one
+SELECT id, user_id, password FROM User_Password WHERE user_id = ? LIMIT 1
+`
+
+func (q *Queries) GetUserPassword(ctx context.Context, userID int32) (UserPassword, error) {
+	row := q.db.QueryRowContext(ctx, getUserPassword, userID)
+	var i UserPassword
+	err := row.Scan(&i.ID, &i.UserID, &i.Password)
+	return i, err
+}
+
 const listUsers = `-- name: ListUsers :many
 SELECT id, fullname, gender, phone, blocked, datecreated, dateupdated FROM User WHERE blocked = false
 ORDER BY id
 LIMIT 1
-OFFSET 1
+FOR UPDATE
 `
 
 func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
@@ -114,8 +146,8 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 	return items, nil
 }
 
-const updateUserInfo = `-- name: UpdateUserInfo :execresult
-UPDATE User SET fullname = ?, phone = ?, gender = ?
+const updateUserInfo = `-- name: UpdateUserInfo :exec
+UPDATE User SET fullname = ?, phone = ?, gender = ?, dateupdated = NOW()
 WHERE id = ? AND blocked = 0
 `
 
@@ -126,16 +158,17 @@ type UpdateUserInfoParams struct {
 	ID       int32  `json:"id"`
 }
 
-func (q *Queries) UpdateUserInfo(ctx context.Context, arg UpdateUserInfoParams) (sql.Result, error) {
-	return q.db.ExecContext(ctx, updateUserInfo,
+func (q *Queries) UpdateUserInfo(ctx context.Context, arg UpdateUserInfoParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserInfo,
 		arg.Fullname,
 		arg.Phone,
 		arg.Gender,
 		arg.ID,
 	)
+	return err
 }
 
-const updateUserPassword = `-- name: UpdateUserPassword :execresult
+const updateUserPassword = `-- name: UpdateUserPassword :exec
 UPDATE User_Password SET password = ? WHERE user_id = ?
 `
 
@@ -144,6 +177,7 @@ type UpdateUserPasswordParams struct {
 	UserID   int32  `json:"user_id"`
 }
 
-func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) (sql.Result, error) {
-	return q.db.ExecContext(ctx, updateUserPassword, arg.Password, arg.UserID)
+func (q *Queries) UpdateUserPassword(ctx context.Context, arg UpdateUserPasswordParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserPassword, arg.Password, arg.UserID)
+	return err
 }

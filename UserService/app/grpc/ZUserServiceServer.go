@@ -3,60 +3,98 @@ package GrpcUserService
 import (
 	"context"
 	"server/UserService/app/apperror"
-	"server/UserService/app/business"
-	"server/UserService/app/dto"
-
-	"github.com/jinzhu/copier"
+	db "server/UserService/app/db/mysql/sqlc"
 )
 
 type ZUserServiceServer struct {
+	repository db.Repository
+}
+
+func NewZUserServiceServer(repository db.Repository) ZUserServiceServer {
+	return ZUserServiceServer{repository: repository}
 }
 
 func (s *ZUserServiceServer) LoginUser(ctx context.Context, request *LoginUserRequest) (*LoginUserResponse, error) {
+	var result *LoginUserResponse
+	user := db.LoginUserParams{
+		Phone:    request.Phone,
+		Password: request.Password,
+	}
 
-	return &LoginUserResponse{
-		UserId:    -1,
-		ErrorCode: apperror.GetCode(apperror.ErrorNotSupportedYet),
-	}, nil
+	record, err := s.repository.LoginUser(ctx, user)
+	if err != nil {
+		return &LoginUserResponse{
+			UserId:    -1,
+			ErrorCode: apperror.GetCode(err),
+		}, err
+	}
+
+	result.UserId = record.ID
+
+	return result, nil
 }
 
 func (s *ZUserServiceServer) LoginTutor(ctx context.Context, request *LoginTutorRequest) (*LoginTutorResponse, error) {
-	return &LoginTutorResponse{
-		TutorId:   -1,
-		ErrorCode: apperror.GetCode(apperror.ErrorNotSupportedYet),
-	}, nil
+	var result LoginTutorResponse
+
+	user := db.LoginTutorParams{
+		Phone:    request.Phone,
+		Password: request.Password,
+	}
+
+	record, err := s.repository.LoginTutor(ctx, user)
+	if err != nil {
+		return &LoginTutorResponse{
+			TutorId:   -1,
+			ErrorCode: apperror.GetCode(err),
+		}, err
+	}
+
+	result.TutorId = record.ID
+
+	return &result, nil
 }
 
 func (s *ZUserServiceServer) RegisterTutor(ctx context.Context, request *RegisterTutorRequest) (*RegisterTutorResponse, error) {
-	return &RegisterTutorResponse{
-		TutorId:   -1,
-		ErrorCode: apperror.GetCode(apperror.ErrorNotSupportedYet),
-	}, nil
-}
-func (s *ZUserServiceServer) RegisterUser(ctx context.Context, request *RegisterUserRequest) (*RegisterUserResponse, error) {
-	var result *RegisterUserResponse
-	user := dto.UserRequest{
-		FullName: request.FullName,
+	var result *RegisterTutorResponse
+	user := db.RegisterTutorParams{
+		Fullname: request.Fullname,
 		Password: request.Password,
 		Phone:    request.Phone,
 		Gender:   request.Gender,
 	}
 
-	record, err := business.Instance.RegisterUser(ctx, user)
+	record, err := s.repository.RegisterTutor(ctx, user)
 	if err != nil {
-		return &RegisterUserResponse{
-			UserId:    -1,
+		return &RegisterTutorResponse{
+			TutorId:   -1,
 			ErrorCode: apperror.GetCode(err),
-		}, nil
+		}, err
 	}
 
-	err = copier.Copy(&result, &record)
+	result.TutorId = record.ID
+
+	return result, nil
+
+}
+func (s *ZUserServiceServer) RegisterUser(ctx context.Context, request *RegisterUserRequest) (*RegisterUserResponse, error) {
+	var result *RegisterUserResponse
+	user := db.RegisterUserParams{
+		Fullname: request.Fullname,
+		Password: request.Password,
+		Phone:    request.Phone,
+		Gender:   request.Gender,
+	}
+
+	record, err := s.repository.RegisterUser(ctx, user)
 	if err != nil {
 		return &RegisterUserResponse{
 			UserId:    -1,
 			ErrorCode: apperror.GetCode(err),
-		}, nil
+		}, err
 	}
+
+	result.UserId = record.ID
 
 	return result, nil
 }

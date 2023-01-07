@@ -1,21 +1,21 @@
 package config
 
 import (
-	"sync"
-
 	"github.com/spf13/viper"
 )
 
 func init() {
 	viper.SetConfigFile("./config/config.env")
-	viper.ReadInConfig()
+	err := viper.ReadInConfig()
+	if err != nil {
+		panic("can not read config file")
+	}
 
-	singleton = &SConfig{}
+	Singleton = &SConfig{}
 }
 
 var (
-	once      sync.Once
-	singleton *SConfig
+	Singleton Config
 )
 
 type Config interface {
@@ -27,8 +27,4 @@ type SConfig struct {
 
 func (s *SConfig) GetConfig(key ConfigKey) interface{} {
 	return viper.Get(key.key)
-}
-
-func GetInstance() *SConfig {
-	return singleton
 }

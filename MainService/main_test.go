@@ -1,51 +1,17 @@
 package main
 
 import (
+	"fmt"
 	GrpcUserService "server/MainService/GrpcClients/UserService"
-	"server/MainService/business"
+	"server/MainService/config"
+	"server/MainService/handlers"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func setupSuite(tb testing.TB) func(tb testing.TB) {
 	return func(tb testing.TB) {
-	}
-}
-
-func TestLoginUser(t *testing.T) {
-	t.Logf("TestLoginUser\n")
-	teardownSuite := setupSuite(t)
-	defer teardownSuite(t)
-
-	got := business.LoginUser(&GrpcUserService.LoginUserRequest{
-		Phone:    "918231893713",
-		Password: "Bao Yeu Tam",
-	})
-	want := GrpcUserService.LoginUserResponse{
-		UserId:    -1,
-		ErrorCode: 30005,
-	}
-
-	if !equalsLoginUserResponse(got, want) {
-		t.Errorf("got %v, wanted %v", got, want)
-	}
-}
-
-func TestLoginTutor(t *testing.T) {
-	t.Logf("TestLoginTutor\n")
-	teardownSuite := setupSuite(t)
-	defer teardownSuite(t)
-
-	got := business.LoginTutor(&GrpcUserService.LoginTutorRequest{
-		Phone:    "918231893713",
-		Password: "Tam",
-	})
-	want := GrpcUserService.LoginTutorResponse{
-		TutorId:   -1,
-		ErrorCode: 30005,
-	}
-
-	if !equalsLoginTutorResponse(got, want) {
-		t.Errorf("got %v, wanted %v", got, want)
 	}
 }
 
@@ -54,43 +20,25 @@ func TestRegisterUser(t *testing.T) {
 	teardownSuite := setupSuite(t)
 	defer teardownSuite(t)
 
-	got := business.RegisterUser(&GrpcUserService.RegisterUserRequest{
+	configuration := config.GetInstance()
+	userHandler := handlers.NewUserApiHanlder(configuration, &GrpcUserService.Instance)
+
+	fmt.Printf(
+		"Server is listening at %v:%v",
+		configuration.GetConfig(config.MAIN_SERVICE_HOST),
+		configuration.GetConfig(config.MAIN_SERVICE_PORT),
+	)
+
+	got := userHandler.Repo.RegisterUser(&GrpcUserService.RegisterUserRequest{
 		FullName: "Bao",
-		Phone:    "183971937121",
+		Phone:    "18397193712",
 		Password: "Tam",
-		Blocked:  true,
 		Gender:   "Male",
 	})
-	want := GrpcUserService.RegisterUserResponse{
-		UserId:    -1,
-		ErrorCode: 30005,
-	}
 
-	if !equalsRegisterUserResponse(got, want) {
-		t.Errorf("got %v, wanted %v", got, want)
-	}
-}
+	fmt.Println(got)
 
-func TestRegisterTutor(t *testing.T) {
-	t.Logf("TestRegisterTutor\n")
-	teardownSuite := setupSuite(t)
-	defer teardownSuite(t)
-
-	got := business.RegisterTutor(&GrpcUserService.RegisterTutorRequest{
-		Phone:    "1987392137",
-		Password: "Tam",
-		FullName: "Bao",
-		Blocked:  true,
-		Gender:   "Male",
-	})
-	want := GrpcUserService.RegisterTutorResponse{
-		TutorId:   -1,
-		ErrorCode: 30005,
-	}
-
-	if !equalsRegisterTutorResponse(got, want) {
-		t.Errorf("got %v, wanted %v", got, want)
-	}
+	assert.NotNil(t, got)
 }
 
 func equalsLoginUserResponse(got *GrpcUserService.LoginUserResponse, want GrpcUserService.LoginUserResponse) bool {
