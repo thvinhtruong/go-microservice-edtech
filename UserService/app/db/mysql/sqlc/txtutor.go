@@ -13,6 +13,10 @@ func (u *TxStore) RegisterTutor(ctx context.Context, arg RegisterTutorParams) (R
 			Fullname: arg.Fullname,
 			Phone:    arg.Phone,
 			Gender:   arg.Gender,
+			Age:      arg.Age,
+			Topic:    arg.Topic,
+			City:     arg.City,
+			Country:  arg.Country,
 		})
 		if err != nil {
 			return err

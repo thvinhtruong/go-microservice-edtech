@@ -18,6 +18,7 @@ type Querier interface {
 	DeleteTutor(ctx context.Context, id int32) error
 	DeleteUser(ctx context.Context, id int32) error
 	DeleteUserPassword(ctx context.Context, userID int32) error
+	FindTutorsMatch(ctx context.Context, arg FindTutorsMatchParams) ([]int32, error)
 	GetTutor(ctx context.Context, id int32) (Tutor, error)
 	GetTutorByPhone(ctx context.Context, phone string) (Tutor, error)
 	GetTutorPassword(ctx context.Context, tutorID int32) (TutorPassword, error)

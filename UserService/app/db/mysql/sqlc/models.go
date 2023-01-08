@@ -18,14 +18,16 @@ type Admin struct {
 }
 
 type Tutor struct {
-	ID          int32         `json:"id"`
-	Fullname    string        `json:"fullname"`
-	Gender      string        `json:"gender"`
-	Phone       string        `json:"phone"`
-	Validate    string        `json:"validate"`
-	Adminid     sql.NullInt32 `json:"adminid"`
-	Datecreated time.Time     `json:"datecreated"`
-	Dateupdated sql.NullTime  `json:"dateupdated"`
+	ID          int32        `json:"id"`
+	Fullname    string       `json:"fullname"`
+	Gender      string       `json:"gender"`
+	Age         int32        `json:"age"`
+	Phone       string       `json:"phone"`
+	Topic       string       `json:"topic"`
+	Country     string       `json:"country"`
+	City        string       `json:"city"`
+	Datecreated time.Time    `json:"datecreated"`
+	Dateupdated sql.NullTime `json:"dateupdated"`
 }
 
 type TutorPassword struct {
@@ -39,7 +41,6 @@ type User struct {
 	Fullname    string       `json:"fullname"`
 	Gender      string       `json:"gender"`
 	Phone       string       `json:"phone"`
-	Blocked     bool         `json:"blocked"`
 	Datecreated time.Time    `json:"datecreated"`
 	Dateupdated sql.NullTime `json:"dateupdated"`
 }

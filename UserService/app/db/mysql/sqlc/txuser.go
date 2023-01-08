@@ -130,5 +130,19 @@ func (u *TxStore) UpdateUser(ctx context.Context, arg UpdateUserParams) error {
 
 		return nil
 	})
+}
 
+func (u *TxStore) FilterTutors(ctx context.Context, params FindTutorsMatchParams) ([]int32, error) {
+	var result []int32
+	err := u.enableTx(ctx, func(q *Queries) error {
+		tutors, err := q.FindTutorsMatch(ctx, params)
+		if err != nil {
+			return err
+		}
+
+		result = append(result, tutors...)
+
+		return nil
+	})
+	return result, err
 }

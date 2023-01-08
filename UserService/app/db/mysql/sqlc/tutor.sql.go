@@ -11,17 +11,29 @@ import (
 )
 
 const createTutor = `-- name: CreateTutor :execresult
-INSERT INTO Tutor (fullname, phone, gender, validate, adminId, datecreated) VALUES(?, ?, ?, false, 0, NOW())
+INSERT INTO Tutor (fullname, phone, gender, age, topic, country, city, datecreated) VALUES(?, ?, ?, ?, ?, ?, ?, NOW())
 `
 
 type CreateTutorParams struct {
 	Fullname string `json:"fullname"`
 	Phone    string `json:"phone"`
 	Gender   string `json:"gender"`
+	Age      int32  `json:"age"`
+	Topic    string `json:"topic"`
+	Country  string `json:"country"`
+	City     string `json:"city"`
 }
 
 func (q *Queries) CreateTutor(ctx context.Context, arg CreateTutorParams) (sql.Result, error) {
-	return q.db.ExecContext(ctx, createTutor, arg.Fullname, arg.Phone, arg.Gender)
+	return q.db.ExecContext(ctx, createTutor,
+		arg.Fullname,
+		arg.Phone,
+		arg.Gender,
+		arg.Age,
+		arg.Topic,
+		arg.Country,
+		arg.City,
+	)
 }
 
 const createTutorPassword = `-- name: CreateTutorPassword :execresult
@@ -47,7 +59,7 @@ func (q *Queries) DeleteTutor(ctx context.Context, id int32) error {
 }
 
 const getTutor = `-- name: GetTutor :one
-SELECT id, fullname, gender, phone, validate, adminid, datecreated, dateupdated FROM Tutor WHERE id = ? AND blocked = 0 LIMIT 1
+SELECT id, fullname, gender, age, phone, topic, country, city, datecreated, dateupdated FROM Tutor WHERE id = ? LIMIT 1 FOR UPDATE
 `
 
 func (q *Queries) GetTutor(ctx context.Context, id int32) (Tutor, error) {
@@ -57,9 +69,11 @@ func (q *Queries) GetTutor(ctx context.Context, id int32) (Tutor, error) {
 		&i.ID,
 		&i.Fullname,
 		&i.Gender,
+		&i.Age,
 		&i.Phone,
-		&i.Validate,
-		&i.Adminid,
+		&i.Topic,
+		&i.Country,
+		&i.City,
 		&i.Datecreated,
 		&i.Dateupdated,
 	)
@@ -67,7 +81,7 @@ func (q *Queries) GetTutor(ctx context.Context, id int32) (Tutor, error) {
 }
 
 const getTutorByPhone = `-- name: GetTutorByPhone :one
-SELECT id, fullname, gender, phone, validate, adminid, datecreated, dateupdated FROM Tutor WHERE phone = ? AND blocked = 0 LIMIT 1
+SELECT id, fullname, gender, age, phone, topic, country, city, datecreated, dateupdated FROM Tutor WHERE phone = ? LIMIT 1 FOR UPDATE
 `
 
 func (q *Queries) GetTutorByPhone(ctx context.Context, phone string) (Tutor, error) {
@@ -77,9 +91,11 @@ func (q *Queries) GetTutorByPhone(ctx context.Context, phone string) (Tutor, err
 		&i.ID,
 		&i.Fullname,
 		&i.Gender,
+		&i.Age,
 		&i.Phone,
-		&i.Validate,
-		&i.Adminid,
+		&i.Topic,
+		&i.Country,
+		&i.City,
 		&i.Datecreated,
 		&i.Dateupdated,
 	)
@@ -98,13 +114,17 @@ func (q *Queries) GetTutorPassword(ctx context.Context, tutorID int32) (TutorPas
 }
 
 const updateTutorInfo = `-- name: UpdateTutorInfo :execresult
-UPDATE Tutor SET fullname = ?, phone = ?, gender = ? WHERE id = ? AND blocked = 0
+UPDATE Tutor SET fullname = ?, phone = ?, gender = ?, topic = ?, age = ?, country = ?, city = ? WHERE id = ?
 `
 
 type UpdateTutorInfoParams struct {
 	Fullname string `json:"fullname"`
 	Phone    string `json:"phone"`
 	Gender   string `json:"gender"`
+	Topic    string `json:"topic"`
+	Age      int32  `json:"age"`
+	Country  string `json:"country"`
+	City     string `json:"city"`
 	ID       int32  `json:"id"`
 }
 
@@ -113,6 +133,10 @@ func (q *Queries) UpdateTutorInfo(ctx context.Context, arg UpdateTutorInfoParams
 		arg.Fullname,
 		arg.Phone,
 		arg.Gender,
+		arg.Topic,
+		arg.Age,
+		arg.Country,
+		arg.City,
 		arg.ID,
 	)
 }

@@ -45,3 +45,28 @@ func TestRegisterUser(t *testing.T) {
 
 	fmt.Println(result)
 }
+
+func TestFilterTutors(t *testing.T) {
+	testDB, err := CreateTestDB()
+	if err != nil {
+		t.Error(err)
+	}
+
+	userUseCase := NewRepository(testDB)
+	got, err := userUseCase.FilterTutors(context.Background(), FindTutorsMatchParams{
+		Gender:  "female",
+		Topic:   "Math",
+		Country: "Vietnam",
+		City:    "Paris",
+		Age:     100,
+	})
+
+	if err != nil {
+		t.Error(err)
+	}
+
+	want := []int32{64}
+
+	require.Equal(t, want, got)
+
+}

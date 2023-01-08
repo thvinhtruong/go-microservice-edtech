@@ -11,8 +11,8 @@ import (
 )
 
 const createUser = `-- name: CreateUser :execresult
-INSERT INTO User (fullname, phone, gender, blocked, datecreated)
-VALUES(?, ? , ?, false, NOW())
+INSERT INTO User (fullname, phone, gender, datecreated)
+VALUES(?, ? , ?, NOW())
 `
 
 type CreateUserParams struct {
@@ -57,9 +57,49 @@ func (q *Queries) DeleteUserPassword(ctx context.Context, userID int32) error {
 	return err
 }
 
+const findTutorsMatch = `-- name: FindTutorsMatch :many
+SELECT id FROM Tutor WHERE gender IN (?) AND topic IN (?) AND country IN (?) AND city IN (?) AND age IN (?) ORDER BY id FOR UPDATE
+`
+
+type FindTutorsMatchParams struct {
+	Gender  string `json:"gender"`
+	Topic   string `json:"topic"`
+	Country string `json:"country"`
+	City    string `json:"city"`
+	Age     int32  `json:"age"`
+}
+
+func (q *Queries) FindTutorsMatch(ctx context.Context, arg FindTutorsMatchParams) ([]int32, error) {
+	rows, err := q.db.QueryContext(ctx, findTutorsMatch,
+		arg.Gender,
+		arg.Topic,
+		arg.Country,
+		arg.City,
+		arg.Age,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []int32
+	for rows.Next() {
+		var id int32
+		if err := rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		items = append(items, id)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getUser = `-- name: GetUser :one
-SELECT id, fullname, gender, phone, blocked, datecreated, dateupdated FROM User WHERE id = ? AND blocked = 0 LIMIT 1
-FOR UPDATE
+SELECT id, fullname, gender, phone, datecreated, dateupdated FROM User WHERE id = ? LIMIT 1 FOR UPDATE
 `
 
 func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
@@ -70,7 +110,6 @@ func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
 		&i.Fullname,
 		&i.Gender,
 		&i.Phone,
-		&i.Blocked,
 		&i.Datecreated,
 		&i.Dateupdated,
 	)
@@ -78,8 +117,7 @@ func (q *Queries) GetUser(ctx context.Context, id int32) (User, error) {
 }
 
 const getUserByPhone = `-- name: GetUserByPhone :one
-SELECT id, fullname, gender, phone, blocked, datecreated, dateupdated FROM User WHERE phone = ? AND blocked = 0 LIMIT 1
-FOR UPDATE
+SELECT id, fullname, gender, phone, datecreated, dateupdated FROM User WHERE phone = ? LIMIT 1 FOR UPDATE
 `
 
 func (q *Queries) GetUserByPhone(ctx context.Context, phone string) (User, error) {
@@ -90,7 +128,6 @@ func (q *Queries) GetUserByPhone(ctx context.Context, phone string) (User, error
 		&i.Fullname,
 		&i.Gender,
 		&i.Phone,
-		&i.Blocked,
 		&i.Datecreated,
 		&i.Dateupdated,
 	)
@@ -109,10 +146,7 @@ func (q *Queries) GetUserPassword(ctx context.Context, userID int32) (UserPasswo
 }
 
 const listUsers = `-- name: ListUsers :many
-SELECT id, fullname, gender, phone, blocked, datecreated, dateupdated FROM User WHERE blocked = false
-ORDER BY id
-LIMIT 1
-FOR UPDATE
+SELECT id, fullname, gender, phone, datecreated, dateupdated FROM User ORDER BY id FOR UPDATE
 `
 
 func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
@@ -129,7 +163,6 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 			&i.Fullname,
 			&i.Gender,
 			&i.Phone,
-			&i.Blocked,
 			&i.Datecreated,
 			&i.Dateupdated,
 		); err != nil {
@@ -148,7 +181,7 @@ func (q *Queries) ListUsers(ctx context.Context) ([]User, error) {
 
 const updateUserInfo = `-- name: UpdateUserInfo :exec
 UPDATE User SET fullname = ?, phone = ?, gender = ?, dateupdated = NOW()
-WHERE id = ? AND blocked = 0
+WHERE id = ?
 `
 
 type UpdateUserInfoParams struct {

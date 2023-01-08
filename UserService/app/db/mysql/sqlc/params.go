@@ -33,6 +33,10 @@ type RegisterTutorParams struct {
 	Phone    string `json:"phone"`
 	Password string `json:"password"`
 	Gender   string `json:"gender"`
+	Age      int32  `json:"age"`
+	Topic    string `json:"topic"`
+	City     string `json:"city"`
+	Country  string `json:"country"`
 }
 
 type RegisterTutorResult struct {
