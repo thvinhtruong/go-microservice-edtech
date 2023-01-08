@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	GrpcUserService "server/MainService/GrpcClients/UserService"
 	"server/MainService/config"
 	"server/MainService/handlers"
@@ -11,14 +12,16 @@ import (
 
 func main() {
 	configuration := config.GetInstance()
-	userApiHandler := handlers.NewUserApiHanlder(configuration, &GrpcUserService.Instance)
-	http.HandleFunc("/api/LoginUser", userApiHandler.LoginUser)
-	http.HandleFunc("/api/RegisterUser", userApiHandler.RegisterUser)
+	userHandler := handlers.NewUserApiHanlder(configuration, GrpcUserService.Instance)
+	http.HandleFunc("/api/LoginUser", userHandler.LoginUser)
+	http.HandleFunc("/api/RegisterUser", userHandler.RegisterUser)
+	dir, _ := os.Getwd()
+	fmt.Println("current path :" + dir)
 
 	port := configuration.GetConfig(config.MAIN_SERVICE_PORT)
 
 	fmt.Printf(
-		"Server is listening at %v:%v",
+		"Server is listening at %v:%v\n",
 		configuration.GetConfig(config.MAIN_SERVICE_HOST),
 		configuration.GetConfig(config.MAIN_SERVICE_PORT),
 	)

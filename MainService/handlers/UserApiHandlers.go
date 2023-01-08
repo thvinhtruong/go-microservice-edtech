@@ -16,8 +16,8 @@ type UserApiHanlder struct {
 	C    config.Config
 }
 
-func NewUserApiHanlder(c config.Config, repo GrpcUserService.UserServiceRepository) *UserApiHanlder {
-	return &UserApiHanlder{
+func NewUserApiHanlder(c config.Config, repo GrpcUserService.UserServiceRepository) UserApiHanlder {
+	return UserApiHanlder{
 		Repo: repo,
 		C:    c,
 	}
@@ -30,6 +30,7 @@ func (u *UserApiHanlder) LoginUser(w http.ResponseWriter, r *http.Request) {
 		Phone:    Phone,
 		Password: Password,
 	}
+
 	res := u.Repo.LoginUser(&loginRequest)
 	out, _ := json.Marshal(res)
 
@@ -64,13 +65,13 @@ func (u *UserApiHanlder) LoginUser(w http.ResponseWriter, r *http.Request) {
 func (u *UserApiHanlder) RegisterUser(w http.ResponseWriter, r *http.Request) {
 	Phone := r.FormValue("Phone")
 	Password := r.FormValue("Password")
-	FullName := r.FormValue("FullName")
+	FullName := r.FormValue("Fullname")
 	Gender := r.FormValue("Gender")
-	fmt.Printf("%v %v %v %v\n", Phone, Password, FullName, Gender)
+	log.Printf("%v %v %v\n", Phone, FullName, Gender)
 	registerRequest := GrpcUserService.RegisterUserRequest{
 		Phone:    Phone,
 		Password: Password,
-		FullName: FullName,
+		Fullname: FullName,
 		Gender:   Gender,
 	}
 	response := u.Repo.RegisterUser(&registerRequest)
@@ -80,16 +81,13 @@ func (u *UserApiHanlder) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		Data:      utils.Convert(_struct.GetRegisterUserResponse(response)),
 	}
 
-	log.Println(response.UserId)
-
 	returnString := utils.Convert(message)
 
-	//Allow CORS here By * or specific origin
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
 	//Setting content type to json
 	w.Header().Set("Content-Type", "application/json")
+	// write json response
 	w.Write([]byte(returnString))
 }
 
@@ -108,7 +106,7 @@ func (u *UserApiHanlder) RegisterTutor(w http.ResponseWriter, r *http.Request) {
 	registerRequest := GrpcUserService.RegisterTutorRequest{
 		Phone:    Phone,
 		Password: Password,
-		FullName: FullName,
+		Fullname: FullName,
 		Gender:   Gender,
 	}
 

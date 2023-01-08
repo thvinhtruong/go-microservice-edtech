@@ -15,7 +15,6 @@ func NewZUserServiceServer(repository db.Repository) ZUserServiceServer {
 }
 
 func (s *ZUserServiceServer) LoginUser(ctx context.Context, request *LoginUserRequest) (*LoginUserResponse, error) {
-	var result *LoginUserResponse
 	user := db.LoginUserParams{
 		Phone:    request.Phone,
 		Password: request.Password,
@@ -29,14 +28,13 @@ func (s *ZUserServiceServer) LoginUser(ctx context.Context, request *LoginUserRe
 		}, err
 	}
 
-	result.UserId = record.ID
-
-	return result, nil
+	return &LoginUserResponse{
+		UserId:    record.ID,
+		ErrorCode: apperror.GetCode(err),
+	}, nil
 }
 
 func (s *ZUserServiceServer) LoginTutor(ctx context.Context, request *LoginTutorRequest) (*LoginTutorResponse, error) {
-	var result LoginTutorResponse
-
 	user := db.LoginTutorParams{
 		Phone:    request.Phone,
 		Password: request.Password,
@@ -50,13 +48,13 @@ func (s *ZUserServiceServer) LoginTutor(ctx context.Context, request *LoginTutor
 		}, err
 	}
 
-	result.TutorId = record.ID
-
-	return &result, nil
+	return &LoginTutorResponse{
+		TutorId:   record.ID,
+		ErrorCode: apperror.GetCode(err),
+	}, nil
 }
 
 func (s *ZUserServiceServer) RegisterTutor(ctx context.Context, request *RegisterTutorRequest) (*RegisterTutorResponse, error) {
-	var result *RegisterTutorResponse
 	user := db.RegisterTutorParams{
 		Fullname: request.Fullname,
 		Password: request.Password,
@@ -72,13 +70,13 @@ func (s *ZUserServiceServer) RegisterTutor(ctx context.Context, request *Registe
 		}, err
 	}
 
-	result.TutorId = record.ID
-
-	return result, nil
+	return &RegisterTutorResponse{
+		TutorId:   record.ID,
+		ErrorCode: apperror.GetCode(err),
+	}, nil
 
 }
 func (s *ZUserServiceServer) RegisterUser(ctx context.Context, request *RegisterUserRequest) (*RegisterUserResponse, error) {
-	var result *RegisterUserResponse
 	user := db.RegisterUserParams{
 		Fullname: request.Fullname,
 		Password: request.Password,
@@ -94,9 +92,11 @@ func (s *ZUserServiceServer) RegisterUser(ctx context.Context, request *Register
 		}, err
 	}
 
-	result.UserId = record.ID
+	return &RegisterUserResponse{
+		UserId:    record.ID,
+		ErrorCode: apperror.GetCode(err),
+	}, nil
 
-	return result, nil
 }
 
 func (s *ZUserServiceServer) mustEmbedUnimplementedUserServiceServer() {

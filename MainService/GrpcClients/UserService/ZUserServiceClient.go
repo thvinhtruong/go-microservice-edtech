@@ -15,7 +15,7 @@ type ZUserServiceClient struct {
 	Config      config.Config
 }
 
-var Instance ZUserServiceClient
+var Instance *ZUserServiceClient
 
 func init() {
 	Config := config.GetInstance()
@@ -24,18 +24,20 @@ func init() {
 		Config.GetConfig(config.USER_SERVICE_HOST),
 		Config.GetConfig(config.USER_SERVICE_PORT),
 	)
+	log.Println("Connecting ... to UserService at", target)
 	conn, err := grpc.Dial(target, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		fmt.Println("Connect to UserService failed")
 		log.Fatal(err)
 	}
 
-	fmt.Println("Connect to UserService success")
 	innerClient := NewUserServiceClient(conn)
-	Instance = ZUserServiceClient{
+	Instance = &ZUserServiceClient{
 		innerClient: innerClient,
 		Config:      Config,
 	}
+
+	fmt.Println("Connected to UserService success")
 }
 
 func (c *ZUserServiceClient) LoginTutor(request *LoginTutorRequest) *LoginTutorResponse {
@@ -49,7 +51,10 @@ func (c *ZUserServiceClient) LoginUser(request *LoginUserRequest) *LoginUserResp
 }
 
 func (c *ZUserServiceClient) RegisterUser(request *RegisterUserRequest) *RegisterUserResponse {
-	response, _ := c.innerClient.RegisterUser(context.Background(), request)
+	response, err := c.innerClient.RegisterUser(context.Background(), request)
+	if err != nil {
+		fmt.Println(err)
+	}
 	return response
 }
 
