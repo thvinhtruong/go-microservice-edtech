@@ -60,6 +60,10 @@ func (s *ZUserServiceServer) RegisterTutor(ctx context.Context, request *Registe
 		Password: request.Password,
 		Phone:    request.Phone,
 		Gender:   request.Gender,
+		Topic:    request.Topic,
+		City:     request.City,
+		Country:  request.Country,
+		Age:      request.Age,
 	}
 
 	record, err := s.repository.RegisterTutor(ctx, user)
@@ -96,7 +100,22 @@ func (s *ZUserServiceServer) RegisterUser(ctx context.Context, request *Register
 		UserId:    record.ID,
 		ErrorCode: apperror.GetCode(err),
 	}, nil
+}
 
+func (s ZUserServiceServer) FilterTutors(ctx context.Context, request *FilterTutorRequest) ([]int32, error) {
+	user := db.FindTutorsMatchParams{
+		Gender:  request.Gender,
+		Topic:   request.Topic,
+		City:    request.City,
+		Country: request.Country,
+		Age:     request.Age,
+	}
+
+	record, err := s.repository.FilterTutors(ctx, user)
+	if err != nil {
+		return []int32{}, err
+	}
+	return record, nil
 }
 
 func (s *ZUserServiceServer) mustEmbedUnimplementedUserServiceServer() {

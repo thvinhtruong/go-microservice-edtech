@@ -43,3 +43,22 @@ func RandomPhone() string {
 func RandomDate() time.Time {
 	return time.Unix(RandomInt(0, time.Now().Unix()), 0)
 }
+
+func RandomAge() int {
+	return int(RandomInt(18, 100))
+}
+
+func RandomTopic() string {
+	topics := []string{"Math", "English", "Physics", "Chemistry", "Biology", "History", "Geography", "Literature", "Music", "Art", "Sport"}
+	return topics[rand.Intn(10)]
+}
+
+func RandomCity() string {
+	cities := []string{"Seoul", "Berlin", "Tokyo", "Paris", "Praha", "Venice", "Boston", "Madrid", "Saigon", "Rome", "New York"}
+	return cities[rand.Intn(10)]
+}
+
+func RandomCountry() string {
+	countries := []string{"Vietnam", "US", "UK", "Japan", "China", "Korea", "Russia", "France", "Germany", "Italy", "Spain"}
+	return countries[rand.Intn(10)]
+}

@@ -9,6 +9,7 @@ import (
 	"server/MainService/config"
 	_struct "server/MainService/struct"
 	"server/MainService/utils"
+	"strconv"
 )
 
 type UserApiHanlder struct {
@@ -63,10 +64,16 @@ func (u *UserApiHanlder) LoginUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (u *UserApiHanlder) RegisterUser(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	Phone := r.FormValue("Phone")
 	Password := r.FormValue("Password")
-	FullName := r.FormValue("Fullname")
+	FullName := r.FormValue("FullName")
 	Gender := r.FormValue("Gender")
+
 	log.Printf("%v %v %v\n", Phone, FullName, Gender)
 	registerRequest := GrpcUserService.RegisterUserRequest{
 		Phone:    Phone,
@@ -74,6 +81,7 @@ func (u *UserApiHanlder) RegisterUser(w http.ResponseWriter, r *http.Request) {
 		Fullname: FullName,
 		Gender:   Gender,
 	}
+
 	response := u.Repo.RegisterUser(&registerRequest)
 	message := _struct.ApiMessage{
 		ErrorCode: response.ErrorCode,
@@ -85,6 +93,7 @@ func (u *UserApiHanlder) RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	//Setting content type to json
 	w.Header().Set("Content-Type", "application/json")
 	// write json response
@@ -96,18 +105,30 @@ func (u *UserApiHanlder) RegisterTutor(w http.ResponseWriter, r *http.Request) {
 	Password := r.FormValue("Password")
 	FullName := r.FormValue("FullName")
 	Gender := r.FormValue("Gender")
+	Topic := r.FormValue("Topic")
+	City := r.FormValue("City")
+	Country := r.FormValue("Country")
+	Age := r.FormValue("Age")
 
-	fmt.Printf("%v %v %v %v\n", Phone,
-		Password,
+	fmt.Printf("%v %v %v %v %v %v\n", Phone,
 		FullName,
 		Gender,
+		Topic,
+		City,
+		Country,
 	)
+
+	intAge, _ := strconv.Atoi(Age)
 
 	registerRequest := GrpcUserService.RegisterTutorRequest{
 		Phone:    Phone,
 		Password: Password,
 		Fullname: FullName,
 		Gender:   Gender,
+		Age:      int32(intAge),
+		Topic:    Topic,
+		City:     City,
+		Country:  Country,
 	}
 
 	response := u.Repo.RegisterTutor(&registerRequest)

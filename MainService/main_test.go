@@ -32,9 +32,35 @@ func TestRegisterUser(t *testing.T) {
 
 	got := userHandler.Repo.RegisterUser(&GrpcUserService.RegisterUserRequest{
 		Fullname: "Bao",
-		Phone:    "0934777222",
+		Phone:    "0934777111",
 		Password: "Tam",
 		Gender:   "Male",
+	})
+
+	log.Printf("got: %v", got)
+
+	require.NotNil(t, got)
+}
+
+func TestRegisterTutor(t *testing.T) {
+	t.Logf("TestRegisterTutor\n")
+	teardownSuite := setupSuite(t)
+	defer teardownSuite(t)
+
+	configuration := config.GetInstance()
+	userHandler := handlers.NewUserApiHanlder(configuration, GrpcUserService.Instance)
+
+	fmt.Printf(
+		"Server is listening at %v:%v\n",
+		configuration.GetConfig(config.MAIN_SERVICE_HOST),
+		configuration.GetConfig(config.MAIN_SERVICE_PORT),
+	)
+
+	got := userHandler.Repo.RegisterTutor(&GrpcUserService.RegisterTutorRequest{
+		Fullname: "Bao",
+		Phone:    "0934777222",
+		Password: "Tam",
+		Gender:   "male",
 	})
 
 	log.Printf("got: %v", got)

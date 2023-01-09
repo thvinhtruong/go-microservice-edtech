@@ -17,9 +17,8 @@ message RegisterUserRequest {
     string Phone=2;
     string Password=3;
     string Gender=4;
-    bool Blocked=5;
-    int64 DateCreated=6;
-    int64 DateUpdated=7;
+    int64 DateCreated=5;
+    int64 DateUpdated=6;
 }
 
 message RegisterUserResponse {
@@ -32,9 +31,24 @@ message RegisterTutorRequest {
     string Phone=2;
     string Password=3;
     string Gender=4;
-    bool Blocked=5;
-    int64 DateCreated=6;
-    int64 DateUpdated=7;
+    int32 Age=5;
+    string Topic=6;
+    string City=7;
+    string Country=8;
+    int64 DateCreated=9;
+    int64 DateUpdated=10;
+}
+
+message FilterTutorRequest {
+    string Gender=1;
+    string Topic=2;
+    string City=3;
+    string Country=4;
+    int32 Age=5;
+}
+
+message FilterTutorResponse {
+    int32 TutorId=1;
 }
 
 message RegisterTutorResponse {
